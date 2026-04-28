@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TTKManager.App.Views.LogsView"
+             x:DataType="vm:LogsViewModel">
+
+    <Design.DataContext>
+        <vm:LogsViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="8">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
+            <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="#666"/>
+        </StackPanel>
+
+        <DataGrid ItemsSource="{Binding Entries}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Time" Binding="{Binding Timestamp}" Width="180"/>
+                <DataGridTextColumn Header="Rule" Binding="{Binding RuleId}" Width="60"/>
+                <DataGridTextColumn Header="Advertiser" Binding="{Binding AdvertiserId}" Width="160"/>
+                <DataGridTextColumn Header="Campaign" Binding="{Binding CampaignId}" Width="140"/>
+                <DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="140"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="80"/>
+                <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*"/>
+                <DataGridTextColumn Header="Error" Binding="{Binding Error}" Width="200"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

@@ -1,0 +1,34 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TTKManager.App.ViewModels"
+        xmlns:views="using:TTKManager.App.Views"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        x:Class="TTKManager.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Width="980" Height="640"
+        Title="{Binding Title}">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="#1A1A1A" Padding="16,10">
+            <TextBlock Text="TTKManager" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+        </Border>
+
+        <TabControl Margin="8">
+            <TabItem Header="Accounts">
+                <views:AccountsView DataContext="{Binding Accounts}"/>
+            </TabItem>
+            <TabItem Header="Schedules">
+                <views:SchedulesView DataContext="{Binding Schedules}"/>
+            </TabItem>
+            <TabItem Header="Logs">
+                <views:LogsView DataContext="{Binding Logs}"/>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TTKManager.App.Views.AccountsView"
+             x:DataType="vm:AccountsViewModel">
+
+    <Design.DataContext>
+        <vm:AccountsViewModel/>
+    </Design.DataContext>
+
+    <DockPanel Margin="8">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
+            <Button Content="Add Demo Account (mock)" Command="{Binding AddDemoAccountCommand}"/>
+            <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="#666"/>
+        </StackPanel>
+
+        <DataGrid ItemsSource="{Binding Accounts}"
+                  SelectedItem="{Binding SelectedAccount}"
+                  IsReadOnly="True"
+                  GridLinesVisibility="Horizontal"
+                  AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Advertiser ID" Binding="{Binding AdvertiserId}" Width="200"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Currency" Binding="{Binding Currency}" Width="80"/>
+                <DataGridTextColumn Header="Country" Binding="{Binding Country}" Width="80"/>
+                <DataGridTextColumn Header="Token Expires" Binding="{Binding AccessTokenExpiresAt}" Width="200"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</UserControl>

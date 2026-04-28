@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="TTKManager.App.Views.SchedulesView"
+             x:DataType="vm:SchedulesViewModel">
+
+    <Design.DataContext>
+        <vm:SchedulesViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="8" RowDefinitions="Auto,Auto,Auto,*">
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" CornerRadius="6" Margin="0,0,0,8">
+            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="8">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewRuleName}" Watermark="Peak hours boost"/>
+                <TextBlock Grid.Row="0" Grid.Column="2" Text="Advertiser ID" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding NewRuleAdvertiserId}" Watermark="7..."/>
+                <TextBlock Grid.Row="0" Grid.Column="4" Text="Campaign ID" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="0" Grid.Column="5" Text="{Binding NewRuleCampaignId}" Watermark="campaign_001"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Action" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AvailableActions}" SelectedItem="{Binding NewRuleAction}" HorizontalAlignment="Stretch"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="Daily Budget" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Row="1" Grid.Column="3" Value="{Binding NewRuleBudget}" Minimum="0" Increment="100"/>
+                <TextBlock Grid.Row="1" Grid.Column="4" Text="Cron" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="1" Grid.Column="5" Text="{Binding NewRuleCron}"/>
+
+                <StackPanel Grid.Row="2" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                    <Button Content="Add Rule" Command="{Binding AddRuleCommand}"/>
+                    <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
+                    <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="#666"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <DataGrid Grid.Row="3" ItemsSource="{Binding Rules}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Advertiser" Binding="{Binding AdvertiserId}" Width="160"/>
+                <DataGridTextColumn Header="Campaign" Binding="{Binding CampaignId}" Width="140"/>
+                <DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="140"/>
+                <DataGridTextColumn Header="Budget" Binding="{Binding BudgetAmount}" Width="100"/>
+                <DataGridTextColumn Header="Cron" Binding="{Binding CronExpression}" Width="180"/>
+                <DataGridCheckBoxColumn Header="On" Binding="{Binding Enabled}" Width="50"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>
