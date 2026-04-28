@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>TTKManager — OAuth Callback</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 640px; margin: 4rem auto; padding: 0 1rem; color: #222; line-height: 1.5; }
+    h1 { font-weight: 600; margin-bottom: 0.4rem; }
+    .box { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; margin: 1rem 0; word-break: break-all; }
+    .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.05em; }
+    button { background: #fe2c55; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 1em; cursor: pointer; }
+    button:hover { background: #d6203f; }
+    button:active { transform: translateY(1px); }
+    .ok { color: #008a00; font-weight: 600; }
+    .err { color: #c00; font-weight: 600; }
+    .hint { color: #555; font-size: 0.92em; }
+  </style>
+</head>
+<body>
+  <h1>TTKManager — OAuth Callback</h1>
+  <p class="hint">Redirect target for the TikTok Marketing API authorization flow.</p>
+
+  <div id="status">Reading authorization code…</div>
+  <div id="content"></div>
+
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var code = params.get('auth_code') || params.get('code');
+      var state = params.get('state') || '';
+      var error = params.get('error') || params.get('error_description');
+      var status = document.getElementById('status');
+      var content = document.getElementById('content');
+
+      function escapeHtml(s) {
+        return String(s).replace(/[&<>"']/g, function (c) {
+          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+        });
+      }
+
+      if (error) {
+        status.innerHTML = '<span class="err">Authorization failed.</span>';
+        content.innerHTML = '<div class="box code">' + escapeHtml(error) + '</div>' +
+          '<p class="hint">Close this tab and try connecting again from TTKManager.</p>';
+        return;
+      }
+
+      if (!code) {
+        status.innerHTML = '<span class="err">No authorization code received.</span>';
+        content.innerHTML = '<p class="hint">This page expects <code>?auth_code=...</code> or <code>?code=...</code> in the URL. ' +
+          'If you opened it directly, please initiate the connection from TTKManager.</p>';
+        return;
+      }
+
+      status.innerHTML = '<span class="ok">Authorization received.</span> Copy the code below and paste it into TTKManager.';
+      content.innerHTML =
+        '<div class="box code" id="codeBox">' + escapeHtml(code) + '</div>' +
+        '<button id="copyBtn">Copy code</button>' +
+        (state ? '<p class="hint">State: <code>' + escapeHtml(state) + '</code></p>' : '') +
+        '<p class="hint">After pasting into TTKManager you can close this tab.</p>';
+
+      document.getElementById('copyBtn').addEventListener('click', function () {
+        var btn = this;
+        navigator.clipboard.writeText(code).then(function () {
+          btn.textContent = 'Copied!';
+          setTimeout(function () { btn.textContent = 'Copy code'; }, 1500);
+        }).catch(function () {
+          btn.textContent = 'Copy failed — select manually';
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
