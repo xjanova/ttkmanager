@@ -250,24 +250,39 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
   text-align: center; padding: 40px 20px; color: var(--txt-3); font-size: 12px;
   border: 1px dashed var(--border); border-radius: 8px;
 }
+
+/* Bilingual */
+body.use-th .lang-en { display: none !important; }
+body.use-en .lang-th { display: none !important; }
+.lang-toggle { display: inline-flex; gap: 0; background: var(--bg-2); border: 1px solid var(--border); border-radius: 6px; padding: 2px; margin: 8px 4px 12px; }
+.lang-toggle button { padding: 4px 10px; font-size: 11px; font-weight: 600; background: transparent; border: 0; color: var(--txt-2); cursor: pointer; border-radius: 4px; }
+.lang-toggle button.active { background: var(--accent); color: #0a1808; }
 </style>
 </head>
-<body>
+<body class="use-th">
 
 <div class="app">
 
 <aside class="sidebar">
   <h1><span class="logo">TTK</span> TTK Manager</h1>
-  <div class="sub">God-tier vision · 30 mockup screens</div>
+  <div class="sub">
+    <span class="lang-th">วิสัยทัศน์ระดับเทพ · Mockup 30 หน้าจอ</span>
+    <span class="lang-en">God-tier vision · 30 mockup screens</span>
+  </div>
 
-  <div class="group">Phase 1 · Foundation</div>
+  <div class="lang-toggle">
+    <button id="th-btn" class="active">TH</button>
+    <button id="en-btn">EN</button>
+  </div>
+
+  <div class="group"><span class="lang-th">Phase 1 · พื้นฐาน</span><span class="lang-en">Phase 1 · Foundation</span></div>
   <a href="#dashboard" class="nav-item">📊 Dashboard <span class="badge p1">P1</span></a>
   <a href="#accounts" class="nav-item">🔑 Accounts <span class="badge p1">P1</span></a>
   <a href="#campaigns" class="nav-item">📦 Campaigns <span class="badge p1">P1</span></a>
   <a href="#schedules" class="nav-item">⏰ Schedules <span class="badge p1">P1</span></a>
   <a href="#logs" class="nav-item">📋 Activity Log <span class="badge p1">P1</span></a>
 
-  <div class="group">Phase 2 · Pro</div>
+  <div class="group"><span class="lang-th">Phase 2 · Pro</span><span class="lang-en">Phase 2 · Pro</span></div>
   <a href="#reports" class="nav-item">📈 Performance Reports <span class="badge p2">P2</span></a>
   <a href="#heatmap" class="nav-item">🔥 Dayparting Heatmap <span class="badge p2">P2</span></a>
   <a href="#auto-rules" class="nav-item">🤖 Auto-Rules Engine <span class="badge p2">P2</span></a>
@@ -279,7 +294,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
   <a href="#ab-test" class="nav-item">🅰️ A/B Test Manager <span class="badge p2">P2</span></a>
   <a href="#audiences" class="nav-item">👥 Audience Manager <span class="badge p2">P2</span></a>
 
-  <div class="group">Phase 3 · Advanced</div>
+  <div class="group"><span class="lang-th">Phase 3 · ขั้นสูง</span><span class="lang-en">Phase 3 · Advanced</span></div>
   <a href="#pixel" class="nav-item">🎯 Pixel & Event Inspector <span class="badge p3">P3</span></a>
   <a href="#funnel" class="nav-item">🪃 Conversion Funnel <span class="badge p3">P3</span></a>
   <a href="#fatigue" class="nav-item">😴 Creative Fatigue <span class="badge p3">P3</span></a>
@@ -292,7 +307,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
   <a href="#scheduled-reports" class="nav-item">📧 Scheduled Reports <span class="badge p3">P3</span></a>
   <a href="#quota" class="nav-item">📡 API Quota Monitor <span class="badge p3">P3</span></a>
 
-  <div class="group">Phase 4 · Operations</div>
+  <div class="group"><span class="lang-th">Phase 4 · ปฏิบัติการ</span><span class="lang-en">Phase 4 · Operations</span></div>
   <a href="#settings" class="nav-item">⚙️ Settings & Preferences <span class="badge p4">P4</span></a>
   <a href="#backup" class="nav-item">💾 Backup / Restore <span class="badge p4">P4</span></a>
   <a href="#health" class="nav-item">🩺 Health Check <span class="badge p4">P4</span></a>
@@ -302,20 +317,26 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <main class="main">
 
 <div class="intro">
-  <h2>TTK Manager — God-Tier Vision Mockups</h2>
-  <p>30 screens covering everything a TikTok ads operator or agency needs in one portable Windows desktop tool. Phase 1 ships with the core; Phase 2–4 light up after the Marketing API is approved and product–market fit is validated.</p>
+  <h2>
+    <span class="lang-th">TTK Manager — Mockup วิสัยทัศน์ระดับเทพ</span>
+    <span class="lang-en">TTK Manager — God-Tier Vision Mockups</span>
+  </h2>
+  <p>
+    <span class="lang-th">30 หน้าจอครอบคลุมทุกอย่างที่ผู้จัดการแอด TikTok หรือเอเจนซี่ต้องการ — รวมในแอปเดสก์ท็อป Windows portable ตัวเดียว · Phase 1 ส่งของใช้งานแล้ว · Phase 2–4 จะทยอยเปิดเมื่อ Marketing API ผ่าน review และมีลูกค้าใช้งานจริง</span>
+    <span class="lang-en">30 screens covering everything a TikTok ads operator or agency needs in one portable Windows desktop tool. Phase 1 ships with the core; Phase 2–4 light up after the Marketing API is approved and product–market fit is validated.</span>
+  </p>
   <div class="legend">
-    <span><span class="dot" style="background:var(--accent)"></span> P1 — already in v0.1 build</span>
-    <span><span class="dot" style="background:var(--info)"></span> P2 — Pro tier (post-API)</span>
-    <span><span class="dot" style="background:var(--warn)"></span> P3 — Advanced tier</span>
-    <span><span class="dot" style="background:var(--txt-2)"></span> P4 — Operations</span>
+    <span><span class="dot" style="background:var(--accent)"></span> <span class="lang-th">P1 — มีในเวอร์ชัน v0.1 แล้ว</span><span class="lang-en">P1 — already in v0.1 build</span></span>
+    <span><span class="dot" style="background:var(--info)"></span> <span class="lang-th">P2 — Pro tier (หลัง API approve)</span><span class="lang-en">P2 — Pro tier (post-API)</span></span>
+    <span><span class="dot" style="background:var(--warn)"></span> <span class="lang-th">P3 — ขั้นสูง</span><span class="lang-en">P3 — Advanced tier</span></span>
+    <span><span class="dot" style="background:var(--txt-2)"></span> <span class="lang-th">P4 — ปฏิบัติการ</span><span class="lang-en">P4 — Operations</span></span>
   </div>
 </div>
 
 <!-- ============== 1 · Dashboard ============== -->
 <section id="dashboard" class="screen">
   <h3><span class="num">01</span> 📊 Dashboard</h3>
-  <p class="hint">Single-glance overview: spend, performance, active rules, alerts. The first thing you see when you open the app.</p>
+  <p class="hint"><span class="lang-th">ภาพรวมหน้าเดียว: งบ · performance · rule ที่ active · alert · เป็นหน้าแรกที่เห็นเมื่อเปิดแอป</span><span class="lang-en">Single-glance overview: spend, performance, active rules, alerts. The first thing you see when you open the app.</span></p>
   <div class="fake-app">
     <div class="titlebar">
       <div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Dashboard
@@ -360,7 +381,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 2 · Accounts ============== -->
 <section id="accounts" class="screen">
   <h3><span class="num">02</span> 🔑 Accounts</h3>
-  <p class="hint">Manage one or many TikTok ad advertiser accounts. OAuth out-of-band, DPAPI-encrypted tokens.</p>
+  <p class="hint"><span class="lang-th">จัดการบัญชีโฆษณา TikTok ได้ตั้งแต่ 1 บัญชีไปจนถึงหลายสิบบัญชี · OAuth แบบ paste auth_code · token เข้ารหัสด้วย DPAPI</span><span class="lang-en">Manage one or many TikTok ad advertiser accounts. OAuth out-of-band, DPAPI-encrypted tokens.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Accounts</div>
     <div class="body">
@@ -392,7 +413,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 3 · Campaigns ============== -->
 <section id="campaigns" class="screen">
   <h3><span class="num">03</span> 📦 Campaigns Browser</h3>
-  <p class="hint">Browse, filter, and inspect all campaigns / ad groups across connected accounts.</p>
+  <p class="hint"><span class="lang-th">ดู / กรอง / ตรวจสอบแคมเปญ + ad group ทั้งหมดในทุกบัญชีที่เชื่อมไว้</span><span class="lang-en">Browse, filter, and inspect all campaigns / ad groups across connected accounts.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Campaigns</div>
     <div class="body">
@@ -425,7 +446,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 4 · Schedules ============== -->
 <section id="schedules" class="screen">
   <h3><span class="num">04</span> ⏰ Schedule Rules</h3>
-  <p class="hint">Time-based budget changes and pause/resume automation. The core feature.</p>
+  <p class="hint"><span class="lang-th">เปลี่ยนงบและ pause/resume ตามเวลาอัตโนมัติ · ฟีเจอร์หลักของแอป</span><span class="lang-en">Time-based budget changes and pause/resume automation. The core feature.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Schedules</div>
     <div class="body">
@@ -462,7 +483,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 5 · Activity Log ============== -->
 <section id="logs" class="screen">
   <h3><span class="num">05</span> 📋 Activity Log</h3>
-  <p class="hint">Every API call, every scheduled action, every error — locally stored, always queryable.</p>
+  <p class="hint"><span class="lang-th">ทุก API call · ทุก scheduled action · ทุก error · เก็บในเครื่องตลอดไป ค้นหาได้</span><span class="lang-en">Every API call, every scheduled action, every error — locally stored, always queryable.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Logs</div>
     <div class="body">
@@ -1178,7 +1199,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 27 · Settings ============== -->
 <section id="settings" class="screen">
   <h3><span class="num">27</span> ⚙️ Settings &amp; Preferences</h3>
-  <p class="hint">App-wide behavior. Lives in a single editable JSON if you prefer.</p>
+  <p class="hint"><span class="lang-th">ตั้งค่าการทำงานของแอปทั้งหมด · เก็บใน JSON ไฟล์เดียวที่แก้มือได้</span><span class="lang-en">App-wide behavior. Lives in a single editable JSON if you prefer.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Settings</div>
     <div class="body">
@@ -1213,7 +1234,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 28 · Backup ============== -->
 <section id="backup" class="screen">
   <h3><span class="num">28</span> 💾 Backup &amp; Restore</h3>
-  <p class="hint">One-click portable archive of your DB, configs, and (optionally) audit log.</p>
+  <p class="hint"><span class="lang-th">คลิกเดียวสร้างไฟล์ archive ของ DB + config + audit log (ออปชันนอล)</span><span class="lang-en">One-click portable archive of your DB, configs, and (optionally) audit log.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Backup</div>
     <div class="body">
@@ -1251,7 +1272,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 29 · Health Check ============== -->
 <section id="health" class="screen">
   <h3><span class="num">29</span> 🩺 Health Check &amp; About</h3>
-  <p class="hint">One panel that proves everything is wired up correctly.</p>
+  <p class="hint"><span class="lang-th">พาเนลเดียวที่ยืนยันว่าทุกอย่างเชื่อมต่อพร้อมใช้งาน</span><span class="lang-en">One panel that proves everything is wired up correctly.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Health</div>
     <div class="body">
@@ -1283,7 +1304,7 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 <!-- ============== 30 · Shortcuts ============== -->
 <section id="shortcuts" class="screen">
   <h3><span class="num">30</span> ⌨️ Keyboard Shortcuts</h3>
-  <p class="hint">Power-user friendly. Everything frequent reachable from the keyboard.</p>
+  <p class="hint"><span class="lang-th">ออกแบบสำหรับ power user · ทุกอย่างที่ใช้บ่อยเข้าถึงผ่านคีย์บอร์ดได้</span><span class="lang-en">Power-user friendly. Everything frequent reachable from the keyboard.</span></p>
   <div class="fake-app">
     <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Shortcuts</div>
     <div class="body">
@@ -1324,7 +1345,8 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 </section>
 
 <div class="empty-hint" style="margin-top:30px;">
-  End of vision · 30 mockup screens · This is the north star, not the v0.1 scope. We ship Phase 1 first.
+  <span class="lang-th">จบ vision · 30 หน้าจอ Mockup · นี่คือดาวเหนือที่เราเล็ง ไม่ใช่ scope ของ v0.1 — เราส่ง Phase 1 ก่อน</span>
+  <span class="lang-en">End of vision · 30 mockup screens · This is the north star, not the v0.1 scope. We ship Phase 1 first.</span>
 </div>
 
 </main>
@@ -1332,6 +1354,23 @@ code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-si
 </div>
 
 <script>
+// Language toggle
+(function () {
+  const stored = localStorage.getItem('ttk-lang');
+  const browser = (navigator.language || 'en').toLowerCase();
+  apply(stored || (browser.startsWith('th') ? 'th' : 'en'));
+  document.getElementById('th-btn')?.addEventListener('click', () => apply('th'));
+  document.getElementById('en-btn')?.addEventListener('click', () => apply('en'));
+  function apply(l) {
+    document.body.classList.toggle('use-th', l === 'th');
+    document.body.classList.toggle('use-en', l === 'en');
+    document.documentElement.setAttribute('lang', l);
+    document.getElementById('th-btn')?.classList.toggle('active', l === 'th');
+    document.getElementById('en-btn')?.classList.toggle('active', l === 'en');
+    localStorage.setItem('ttk-lang', l);
+  }
+})();
+
 // Heatmap synthetic data
 (function () {
   const hm = document.getElementById('hm');

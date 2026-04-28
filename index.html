@@ -1,201 +1,147 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TTK Manager — TikTok Marketing API ad scheduler</title>
-<meta name="description" content="Portable Windows desktop tool for managing TikTok ad campaigns: scheduled budgets, dayparting, auto-rules, anomaly detection, budget pacing.">
+<title>TTK Manager — เครื่องมือจัดการแอด TikTok แบบอัตโนมัติ</title>
+<meta name="description" content="โปรแกรม Windows portable สำหรับจัดการแคมเปญ TikTok Ads — ตั้งเวลายิงงบ, dayparting, auto-rules, ตรวจจับความผิดปกติ, คุมเพดานงบประมาณ.">
 <meta property="og:title" content="TTK Manager">
-<meta property="og:description" content="Portable .NET 9 + Avalonia desktop tool for TikTok ads — schedules, auto-rules, anomaly detection, budget pacing.">
+<meta property="og:description" content="โปรแกรม .NET 9 + Avalonia บน Windows สำหรับ TikTok ads — schedule, auto-rules, anomaly, budget pacing">
 <meta property="og:image" content="logottk.png">
 <meta name="theme-color" content="#a3e635">
 <link rel="icon" href="logottk.png" type="image/png">
 <style>
 :root {
-  --bg-0: #050709;
-  --bg-1: #070b0d;
-  --bg-2: #0c1417;
-  --bg-3: #121b1f;
-  --bg-card: #0f1a1c;
-  --bg-elev: #162226;
-  --accent: #a3e635;
-  --accent-2: #84cc16;
-  --accent-3: #65a30d;
-  --accent-light: #bef264;
+  --bg-0: #050709; --bg-1: #070b0d; --bg-2: #0c1417; --bg-3: #121b1f;
+  --bg-card: #0f1a1c; --bg-elev: #162226;
+  --accent: #a3e635; --accent-2: #84cc16; --accent-3: #65a30d; --accent-light: #bef264;
   --accent-glow: rgba(163,230,53,0.12);
-  --danger: #ef4444;
-  --warn: #f59e0b;
-  --ok: #22c55e;
-  --info: #22d3ee;
-  --txt-1: #ecfccb;
-  --txt-2: #94a3b8;
-  --txt-3: #64748b;
-  --border: #1f2e2a;
-  --border-2: #2f4438;
+  --danger: #ef4444; --warn: #f59e0b; --ok: #22c55e; --info: #22d3ee;
+  --txt-1: #ecfccb; --txt-2: #94a3b8; --txt-3: #64748b;
+  --border: #1f2e2a; --border-2: #2f4438;
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; background: var(--bg-0); color: var(--txt-1);
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'IBM Plex Sans Thai', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Sarabun', sans-serif;
   font-size: 15px; line-height: 1.6; scroll-behavior: smooth; }
 a { color: var(--accent); text-decoration: none; }
 a:hover { color: var(--accent-light); }
 code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; }
 
+/* Bilingual toggle */
+body.use-th .lang-en { display: none !important; }
+body.use-en .lang-th { display: none !important; }
+.lang-en, .lang-th { /* default: both visible until JS sets a class */ }
+
 .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
 
-/* Top bar */
 .topbar { position: sticky; top: 0; z-index: 50; background: rgba(7,11,13,0.85);
   backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
 .topbar .row { display: flex; align-items: center; gap: 14px; padding: 12px 0; }
 .topbar .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
 .topbar .brand img { width: 32px; height: 32px; border-radius: 6px; }
 .topbar .brand .accent { color: var(--accent); }
-.topbar nav { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
-.topbar nav a {
-  padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--txt-2);
-  transition: all 0.15s;
-}
+.topbar nav { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.topbar nav a { padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--txt-2); transition: all 0.15s; }
 .topbar nav a:hover { background: var(--bg-2); color: var(--accent); }
-.topbar nav a.cta {
-  background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3));
-  color: #0a1808; font-weight: 600;
-}
+.topbar nav a.cta { background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3)); color: #0a1808; font-weight: 600; }
 .topbar nav a.cta:hover { color: #0a1808; opacity: 0.9; }
+.lang-toggle {
+  display: inline-flex; background: var(--bg-elev); border: 1px solid var(--border-2);
+  border-radius: 6px; padding: 2px; font-size: 11px; gap: 0;
+}
+.lang-toggle button {
+  padding: 4px 10px; background: transparent; border: 0; cursor: pointer;
+  color: var(--txt-2); font-weight: 600; font-size: 11px; border-radius: 4px;
+}
+.lang-toggle button.active { background: var(--accent); color: #0a1808; }
 
-/* Hero */
-.hero {
-  position: relative; padding: 80px 0 60px; overflow: hidden;
-  background: radial-gradient(ellipse at top, rgba(163,230,53,0.08), transparent 60%);
-}
-.hero::before {
-  content: ''; position: absolute; inset: 0; background:
+.hero { position: relative; padding: 80px 0 60px; overflow: hidden;
+  background: radial-gradient(ellipse at top, rgba(163,230,53,0.08), transparent 60%); }
+.hero::before { content: ''; position: absolute; inset: 0; pointer-events: none; background:
     radial-gradient(circle at 20% 30%, rgba(163,230,53,0.06), transparent 40%),
-    radial-gradient(circle at 80% 70%, rgba(34,211,238,0.05), transparent 40%);
-  pointer-events: none;
-}
+    radial-gradient(circle at 80% 70%, rgba(34,211,238,0.05), transparent 40%); }
 .hero .row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; position: relative; }
-.hero .badge {
-  display: inline-flex; align-items: center; gap: 8px;
+.hero .badge { display: inline-flex; align-items: center; gap: 8px;
   padding: 4px 12px; border-radius: 14px; font-size: 12px; font-weight: 500;
   background: rgba(163,230,53,0.10); border: 1px solid rgba(163,230,53,0.25);
-  color: var(--accent-light); margin-bottom: 18px;
-}
+  color: var(--accent-light); margin-bottom: 18px; }
 .hero .badge .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; box-shadow: 0 0 8px var(--accent); }
 .hero h1 { font-size: 50px; line-height: 1.1; margin: 0 0 16px;
   background: linear-gradient(180deg, #ffffff, #ecfccb 50%, var(--accent-light));
   -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
-  letter-spacing: -1px; font-weight: 800;
-}
+  letter-spacing: -1px; font-weight: 800; }
 .hero h1 .accent { color: var(--accent); -webkit-text-fill-color: var(--accent); }
 .hero p.lede { color: var(--txt-2); font-size: 18px; margin: 0 0 24px; max-width: 540px; }
 .hero .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
 .hero .btn-primary, .hero .btn-secondary {
   padding: 12px 22px; border-radius: 8px; font-weight: 600; font-size: 14px;
-  display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
-}
-.hero .btn-primary {
-  background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3));
-  color: #0a1808; box-shadow: 0 0 24px rgba(163,230,53,0.3);
-}
+  display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+.hero .btn-primary { background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3));
+  color: #0a1808; box-shadow: 0 0 24px rgba(163,230,53,0.3); }
 .hero .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 32px rgba(163,230,53,0.5); }
 .hero .btn-secondary { background: var(--bg-elev); border: 1px solid var(--border-2); color: var(--txt-1); }
 .hero .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
 
-.hero-visual {
-  position: relative; aspect-ratio: 1.1; max-width: 420px; margin: 0 auto;
+.hero-visual { position: relative; aspect-ratio: 1.1; max-width: 420px; margin: 0 auto;
   background: radial-gradient(circle, rgba(163,230,53,0.12), transparent 70%);
-  display: grid; place-items: center;
-}
+  display: grid; place-items: center; }
 .hero-visual img { width: 70%; max-width: 320px; filter: drop-shadow(0 0 30px rgba(163,230,53,0.4)); }
-.hero-visual .ring {
-  position: absolute; inset: 12%; border: 1px solid rgba(163,230,53,0.2);
-  border-radius: 50%; animation: spin 18s linear infinite;
-}
+.hero-visual .ring { position: absolute; inset: 12%; border: 1px solid rgba(163,230,53,0.2);
+  border-radius: 50%; animation: spin 18s linear infinite; }
 .hero-visual .ring:nth-child(2) { inset: 22%; border-color: rgba(163,230,53,0.12); animation-duration: 28s; animation-direction: reverse; }
 @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-.badges-row {
-  display: flex; gap: 8px; flex-wrap: wrap; margin: 24px 0 0;
-}
-.b-pill {
-  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+.badges-row { display: flex; gap: 8px; flex-wrap: wrap; margin: 24px 0 0; }
+.b-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
   border-radius: 12px; font-size: 11px; font-family: 'JetBrains Mono', monospace;
-  background: var(--bg-elev); border: 1px solid var(--border); color: var(--txt-2);
-}
+  background: var(--bg-elev); border: 1px solid var(--border); color: var(--txt-2); }
 .b-pill .key { color: var(--accent-light); }
 
-/* Stats */
 .stats { padding: 40px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 .stats .row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
 .stats .stat { text-align: center; }
 .stats .stat .num { font-size: 36px; font-weight: 800; color: var(--accent);
   background: linear-gradient(180deg, var(--accent-light), var(--accent-3));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-}
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 .stats .stat .lbl { color: var(--txt-2); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-/* Section heading */
 section { padding: 70px 0; }
-section h2.section-title {
-  font-size: 32px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.5px;
-}
+section h2.section-title { font-size: 32px; font-weight: 800; margin: 0 0 8px; letter-spacing: -0.5px; }
 section h2.section-title .accent { color: var(--accent); }
-section p.section-sub { color: var(--txt-2); font-size: 16px; margin: 0 0 36px; max-width: 640px; }
+section p.section-sub { color: var(--txt-2); font-size: 16px; margin: 0 0 36px; max-width: 720px; }
 
-/* Features grid */
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-.feature {
-  background: linear-gradient(180deg, var(--bg-elev), var(--bg-card));
-  border: 1px solid var(--border); border-radius: 12px; padding: 22px;
-  transition: all 0.2s;
-}
+.feature { background: linear-gradient(180deg, var(--bg-elev), var(--bg-card));
+  border: 1px solid var(--border); border-radius: 12px; padding: 22px; transition: all 0.2s; }
 .feature:hover { border-color: var(--accent-3); transform: translateY(-2px); }
 .feature .ico { font-size: 28px; margin-bottom: 12px; display: block; }
 .feature h3 { margin: 0 0 8px; font-size: 16px; color: var(--accent); }
 .feature p { margin: 0; color: var(--txt-2); font-size: 13px; }
 
-/* Quick-start */
 .qs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-.qs-step {
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 22px;
-  position: relative;
-}
-.qs-step::before {
-  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
-  background: linear-gradient(180deg, var(--accent), var(--accent-3));
-  border-radius: 12px 0 0 12px;
-}
+.qs-step { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 22px; position: relative; }
+.qs-step::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--accent), var(--accent-3)); border-radius: 12px 0 0 12px; }
 .qs-step .num { font-size: 11px; color: var(--accent-light); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; }
 .qs-step h3 { margin: 4px 0 10px; font-size: 18px; color: var(--txt-1); }
-.qs-step pre {
-  background: var(--bg-1); border: 1px solid var(--border); border-radius: 6px;
-  padding: 10px 14px; font-size: 12px; color: var(--accent-light);
-  overflow-x: auto; margin: 8px 0;
-}
+.qs-step pre { background: var(--bg-1); border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 14px; font-size: 12px; color: var(--accent-light); overflow-x: auto; margin: 8px 0; }
 .qs-step code { color: var(--accent-light); }
 .qs-step p { color: var(--txt-2); font-size: 13px; margin: 8px 0 0; }
 
-/* Screenshots */
-.screens-tabs {
-  display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 24px;
-  background: var(--bg-elev); border-radius: 8px; padding: 4px; width: fit-content;
-}
-.screens-tabs button {
-  padding: 8px 14px; border-radius: 6px; background: transparent; border: 0;
-  color: var(--txt-2); cursor: pointer; font-size: 13px; transition: all 0.15s;
-}
+.screens-tabs { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 24px;
+  background: var(--bg-elev); border-radius: 8px; padding: 4px; width: fit-content; }
+.screens-tabs button { padding: 8px 14px; border-radius: 6px; background: transparent; border: 0;
+  color: var(--txt-2); cursor: pointer; font-size: 13px; transition: all 0.15s; }
 .screens-tabs button.active { background: var(--accent); color: #0a1808; font-weight: 600; }
 .screens-tabs button:hover:not(.active) { color: var(--accent-light); }
 
-.screen-frame {
-  border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
-  background: var(--bg-1); box-shadow: 0 8px 40px rgba(0,0,0,0.4);
-}
-.screen-frame .titlebar {
-  background: linear-gradient(90deg, var(--bg-1), var(--bg-2)); padding: 10px 14px;
+.screen-frame { border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  background: var(--bg-1); box-shadow: 0 8px 40px rgba(0,0,0,0.4); }
+.screen-frame .titlebar { background: linear-gradient(90deg, var(--bg-1), var(--bg-2)); padding: 10px 14px;
   border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px;
-  font-size: 12px; color: var(--txt-2);
-}
+  font-size: 12px; color: var(--txt-2); }
 .screen-frame .titlebar img { width: 22px; height: 22px; }
 .screen-frame .titlebar .accent { color: var(--accent); font-weight: 600; }
 .screen-frame .titlebar .pill { margin-left: auto; padding: 3px 10px; border-radius: 12px;
@@ -204,20 +150,16 @@ section p.section-sub { color: var(--txt-2); font-size: 16px; margin: 0 0 36px; 
 
 .screen-body { padding: 18px; }
 .screen-body.with-sidebar { display: grid; grid-template-columns: 220px 1fr; gap: 0; padding: 0; }
-.screen-body .sb {
-  background: var(--bg-1); border-right: 1px solid var(--border); padding: 14px 8px;
-  font-size: 12px; min-height: 360px;
-}
+.screen-body .sb { background: var(--bg-1); border-right: 1px solid var(--border); padding: 14px 8px;
+  font-size: 12px; min-height: 360px; }
 .screen-body .sb .grp { color: var(--accent-light); font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; margin: 10px 8px 4px; }
 .screen-body .sb .item { padding: 6px 8px; border-radius: 4px; color: var(--txt-2); }
 .screen-body .sb .item.active { background: rgba(163,230,53,0.12); color: var(--accent); font-weight: 600; }
 .screen-body .content { padding: 18px; }
 
 .kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
-.kpi {
-  background: linear-gradient(180deg, var(--bg-elev), var(--bg-card));
-  border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px;
-}
+.kpi { background: linear-gradient(180deg, var(--bg-elev), var(--bg-card));
+  border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
 .kpi .label { font-size: 10px; color: var(--txt-2); text-transform: uppercase; letter-spacing: 0.05em; }
 .kpi .value { font-size: 22px; font-weight: 700; color: var(--accent); margin: 4px 0 2px; }
 .kpi .delta { font-size: 11px; color: var(--ok); }
@@ -233,31 +175,19 @@ section p.section-sub { color: var(--txt-2); font-size: 16px; margin: 0 0 36px; 
 .tag.red { background: rgba(239,68,68,0.15); color: var(--danger); }
 .tag.lime { background: rgba(163,230,53,0.15); color: var(--accent-light); }
 
-.heatmap-mini {
-  display: grid; grid-template-columns: 50px repeat(24, 1fr); gap: 2px; font-size: 9px; color: var(--txt-3);
-}
+.heatmap-mini { display: grid; grid-template-columns: 50px repeat(24, 1fr); gap: 2px; font-size: 9px; color: var(--txt-3); }
 .heatmap-mini .lbl { padding: 2px 4px; }
 .heatmap-mini .cell { height: 18px; border-radius: 2px; background: var(--bg-3); }
 
-/* Tech stack */
 .tech-stack { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-.tech-item {
-  text-align: center; padding: 18px; background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 10px;
-}
+.tech-item { text-align: center; padding: 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; }
 .tech-item .ico { font-size: 28px; margin-bottom: 6px; display: block; }
 .tech-item .name { font-weight: 600; color: var(--accent); font-size: 14px; }
 .tech-item .desc { font-size: 11px; color: var(--txt-2); margin-top: 2px; }
 
-/* Roadmap */
 .roadmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-.phase {
-  background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px;
-}
-.phase .tag-phase {
-  display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 700;
-  margin-bottom: 8px;
-}
+.phase { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.phase .tag-phase { display: inline-block; padding: 3px 10px; border-radius: 10px; font-size: 10px; font-weight: 700; margin-bottom: 8px; }
 .phase[data-p="1"] .tag-phase { background: rgba(163,230,53,0.15); color: var(--accent-light); }
 .phase[data-p="2"] .tag-phase { background: rgba(34,211,238,0.15); color: var(--info); }
 .phase[data-p="3"] .tag-phase { background: rgba(245,158,11,0.15); color: var(--warn); }
@@ -266,23 +196,22 @@ section p.section-sub { color: var(--txt-2); font-size: 16px; margin: 0 0 36px; 
 .phase ul { margin: 0; padding-left: 18px; color: var(--txt-2); font-size: 12px; }
 .phase ul li { margin: 4px 0; }
 
-/* Footer */
 footer { padding: 40px 0; border-top: 1px solid var(--border); color: var(--txt-3); font-size: 12px; }
 footer .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 footer .row > div:last-child { margin-left: auto; }
 footer a { color: var(--txt-2); }
 
-/* Responsive */
 @media (max-width: 880px) {
   .hero .row { grid-template-columns: 1fr; }
   .hero h1 { font-size: 36px; }
   .stats .row, .features, .roadmap, .tech-stack { grid-template-columns: repeat(2, 1fr); }
   .qs-grid { grid-template-columns: 1fr; }
   .topbar nav { display: none; }
+  .topbar nav.lang-only { display: flex !important; }
 }
 </style>
 </head>
-<body>
+<body class="use-th">
 
 <header class="topbar">
   <div class="container row">
@@ -290,12 +219,16 @@ footer a { color: var(--txt-2); }
       <img src="logottk.png" alt="TTK">
       <span>TTK <span class="accent">Manager</span></span>
     </a>
-    <nav>
-      <a href="#features">Features</a>
-      <a href="#screenshots">Screenshots</a>
-      <a href="#quickstart">Quick start</a>
-      <a href="#roadmap">Roadmap</a>
-      <a href="mockups/">All mockups</a>
+    <nav class="lang-only">
+      <a href="#features"><span class="lang-th">ฟีเจอร์</span><span class="lang-en">Features</span></a>
+      <a href="#screenshots"><span class="lang-th">ภาพในแอป</span><span class="lang-en">Screenshots</span></a>
+      <a href="#quickstart"><span class="lang-th">เริ่มใช้งาน</span><span class="lang-en">Quick start</span></a>
+      <a href="#roadmap"><span class="lang-th">แผนพัฒนา</span><span class="lang-en">Roadmap</span></a>
+      <a href="mockups/"><span class="lang-th">Mockup ทั้งหมด</span><span class="lang-en">All mockups</span></a>
+      <div class="lang-toggle" role="group" aria-label="language">
+        <button id="lang-th-btn" class="active" aria-pressed="true">TH</button>
+        <button id="lang-en-btn" aria-pressed="false">EN</button>
+      </div>
       <a href="https://xman4289.com" class="cta">xman4289.com</a>
     </nav>
   </div>
@@ -304,13 +237,23 @@ footer a { color: var(--txt-2); }
 <section class="hero" id="top">
   <div class="container row">
     <div>
-      <span class="badge"><span class="dot"></span> v0.1.0 · self-use stage · Marketing API in review</span>
-      <h1>Run TikTok ads <span class="accent">on autopilot.</span></h1>
-      <p class="lede">A portable Windows desktop tool that schedules budgets, paces spend, fires auto-rules on metric thresholds, and detects performance anomalies — for one or many TikTok ad accounts. No backend, no telemetry, your tokens stay on your machine.</p>
+      <span class="badge">
+        <span class="dot"></span>
+        <span class="lang-th">v0.1.0 · ระยะ self-use · กำลังรอ Marketing API approve</span>
+        <span class="lang-en">v0.1.0 · self-use stage · Marketing API in review</span>
+      </span>
+      <h1>
+        <span class="lang-th">ยิงแอด TikTok <span class="accent">บนออโตไพลอต.</span></span>
+        <span class="lang-en">Run TikTok ads <span class="accent">on autopilot.</span></span>
+      </h1>
+      <p class="lede">
+        <span class="lang-th">โปรแกรมเดสก์ท็อป Windows แบบ portable ที่ตั้งเวลายิงงบ ปรับ pacing คุมเพดาน ยิง auto-rules ตาม metric และตรวจจับความผิดปกติของแคมเปญ — รองรับหลายบัญชีโฆษณา TikTok ในเครื่องเดียว ไม่มี backend ไม่มี telemetry token เข้ารหัสเก็บอยู่ในเครื่องคุณเอง</span>
+        <span class="lang-en">A portable Windows desktop tool that schedules budgets, paces spend, fires auto-rules on metric thresholds, and detects performance anomalies — for one or many TikTok ad accounts. No backend, no telemetry, your tokens stay on your machine.</span>
+      </p>
       <div class="cta-row">
-        <a href="#quickstart" class="btn-primary">▸ Quick start</a>
-        <a href="mockups/" class="btn-secondary">↗ Browse 30-screen mockup</a>
-        <a href="callback.html" class="btn-secondary">↗ View OAuth callback</a>
+        <a href="#quickstart" class="btn-primary"><span class="lang-th">▸ เริ่มใช้งาน</span><span class="lang-en">▸ Quick start</span></a>
+        <a href="mockups/" class="btn-secondary"><span class="lang-th">↗ ดู Mockup 30 หน้าจอ</span><span class="lang-en">↗ Browse 30-screen mockup</span></a>
+        <a href="callback.html" class="btn-secondary"><span class="lang-th">↗ หน้า OAuth callback</span><span class="lang-en">↗ View OAuth callback</span></a>
       </div>
       <div class="badges-row">
         <span class="b-pill"><span class="key">.NET</span> 9</span>
@@ -322,8 +265,7 @@ footer a { color: var(--txt-2); }
       </div>
     </div>
     <div class="hero-visual">
-      <div class="ring"></div>
-      <div class="ring"></div>
+      <div class="ring"></div><div class="ring"></div>
       <img src="logottk.png" alt="TTK Manager">
     </div>
   </div>
@@ -331,55 +273,97 @@ footer a { color: var(--txt-2); }
 
 <section class="stats">
   <div class="container row">
-    <div class="stat"><div class="num">30</div><div class="lbl">Mockup screens</div></div>
-    <div class="stat"><div class="num">15</div><div class="lbl">Real features shipped</div></div>
-    <div class="stat"><div class="num">0</div><div class="lbl">External services required</div></div>
-    <div class="stat"><div class="num">~28<small style="font-size:18px"> MB</small></div><div class="lbl">Single-file portable exe</div></div>
+    <div class="stat"><div class="num">30</div><div class="lbl"><span class="lang-th">หน้าจอ Mockup</span><span class="lang-en">Mockup screens</span></div></div>
+    <div class="stat"><div class="num">15</div><div class="lbl"><span class="lang-th">ฟีเจอร์ใช้จริง</span><span class="lang-en">Real features shipped</span></div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl"><span class="lang-th">บริการนอกที่ต้องใช้</span><span class="lang-en">External services required</span></div></div>
+    <div class="stat"><div class="num">~28<small style="font-size:18px"> MB</small></div><div class="lbl"><span class="lang-th">Single-file portable .exe</span><span class="lang-en">Single-file portable exe</span></div></div>
   </div>
 </section>
 
 <section id="features">
   <div class="container">
-    <h2 class="section-title">What it does <span class="accent">today.</span></h2>
-    <p class="section-sub">15 real shipping features across the foundation and pro tiers. The 16 advanced/integration features are scaffolded and unlock as the Marketing API is fully approved.</p>
+    <h2 class="section-title">
+      <span class="lang-th">สิ่งที่ใช้ได้ <span class="accent">วันนี้.</span></span>
+      <span class="lang-en">What it does <span class="accent">today.</span></span>
+    </h2>
+    <p class="section-sub">
+      <span class="lang-th">15 ฟีเจอร์ใช้งานจริงในกลุ่ม Foundation และ Pro · อีก 14 ฟีเจอร์ขั้น Advanced/Integration ขึ้นโครงไว้พร้อมใช้ทันทีที่ Marketing API ผ่าน review</span>
+      <span class="lang-en">15 real shipping features across the foundation and pro tiers. The 14 advanced/integration features are scaffolded and unlock as the Marketing API is fully approved.</span>
+    </p>
     <div class="features">
-      <div class="feature"><span class="ico">📊</span><h3>Dashboard</h3><p>KPI tiles for spend / CPM / CPC / ROAS, active rules, recent activity, and unread alerts in one glance.</p></div>
-      <div class="feature"><span class="ico">🔑</span><h3>Multi-Account OAuth</h3><p>Connect any number of TikTok ad accounts. Out-of-band code paste; tokens encrypted at rest with DPAPI + AES-GCM.</p></div>
-      <div class="feature"><span class="ico">⏰</span><h3>Schedule Rules</h3><p>Cron-based dayparting and budget control. 9 named presets (peak hours, weekdays, hourly testing) or any custom expression.</p></div>
-      <div class="feature"><span class="ico">🤖</span><h3>Auto-Rules Engine</h3><p>If-then triggers on CPC, CPM, CTR, ROAS, spend, conversions, frequency. Pause losers, scale winners, alert on anomalies.</p></div>
-      <div class="feature"><span class="ico">⚠️</span><h3>Anomaly Detector</h3><p>Z-score CPM and CPC against a 14-day baseline. Warning at 2σ, critical at 3σ. Alerts logged locally.</p></div>
-      <div class="feature"><span class="ico">💰</span><h3>Budget Pacing</h3><p>Daily / weekly / monthly caps with optional auto-pause. Never blow the period budget.</p></div>
-      <div class="feature"><span class="ico">📋</span><h3>Bulk Operations</h3><p>Multi-select campaigns and pause / enable / set-budget in one shot. Excel-flavored productivity.</p></div>
-      <div class="feature"><span class="ico">📤</span><h3>CSV Import / Export</h3><p>Round-trip schedule rules through Excel. Export accounts and 10k-row audit log for offline analysis.</p></div>
-      <div class="feature"><span class="ico">📈</span><h3>Performance Reports</h3><p>1-/7-/14-/30-day windows, per-campaign rollup with derived CPC, CPM, CTR, ROAS columns.</p></div>
-      <div class="feature"><span class="ico">🔥</span><h3>Dayparting Heatmap</h3><p>7×24 hour-by-day grid colored by ROAS / CPM / CTR / Conversions. Find the hot windows.</p></div>
-      <div class="feature"><span class="ico">📋</span><h3>Activity Log</h3><p>Every API call, scheduled action, retry, and error — searchable, exportable, 30-day default retention.</p></div>
-      <div class="feature"><span class="ico">💾</span><h3>Backup &amp; Restore</h3><p>Single .ttkbak archive with DB + settings. Auto-snapshot before destructive restores.</p></div>
-      <div class="feature"><span class="ico">🩺</span><h3>Health Check</h3><p>SQLite, token store, Quartz, mock mode, disk — one panel, one click.</p></div>
-      <div class="feature"><span class="ico">⚙️</span><h3>Settings</h3><p>Edit App ID, Secret, Redirect URI, DB path, mock mode. Persists to gitignored appsettings.local.json.</p></div>
-      <div class="feature"><span class="ico">⌨️</span><h3>Keyboard Shortcuts</h3><p>Ctrl+1..8 to navigate, F5 to refresh, Ctrl+, for settings. Designed for power users.</p></div>
+      <div class="feature"><span class="ico">📊</span><h3>Dashboard</h3><p>
+        <span class="lang-th">การ์ด KPI ของ spend / CPM / CPC / ROAS, rule ที่ active, กิจกรรมล่าสุด และ alert ที่ยังไม่อ่าน — ดูได้ในหน้าเดียว</span>
+        <span class="lang-en">KPI tiles for spend / CPM / CPC / ROAS, active rules, recent activity, and unread alerts in one glance.</span></p></div>
+      <div class="feature"><span class="ico">🔑</span><h3>Multi-Account OAuth</h3><p>
+        <span class="lang-th">เชื่อมบัญชีโฆษณา TikTok ได้ไม่จำกัด ใช้ flow paste auth_code · token เข้ารหัสด้วย DPAPI + AES-GCM ในเครื่อง</span>
+        <span class="lang-en">Connect any number of TikTok ad accounts. Out-of-band code paste; tokens encrypted at rest with DPAPI + AES-GCM.</span></p></div>
+      <div class="feature"><span class="ico">⏰</span><h3>Schedule Rules</h3><p>
+        <span class="lang-th">ตั้งเวลาด้วย Cron + dayparting · 9 preset (peak hours, weekdays, hourly) หรือเขียน expression เอง</span>
+        <span class="lang-en">Cron-based dayparting and budget control. 9 named presets (peak hours, weekdays, hourly testing) or any custom expression.</span></p></div>
+      <div class="feature"><span class="ico">🤖</span><h3>Auto-Rules Engine</h3><p>
+        <span class="lang-th">If-then trigger ที่อิง CPC, CPM, CTR, ROAS, spend, conversions, frequency · pause ตัวที่แย่, scale ตัวที่ดี, alert เมื่อมี anomaly</span>
+        <span class="lang-en">If-then triggers on CPC, CPM, CTR, ROAS, spend, conversions, frequency. Pause losers, scale winners, alert on anomalies.</span></p></div>
+      <div class="feature"><span class="ico">⚠️</span><h3>Anomaly Detector</h3><p>
+        <span class="lang-th">คำนวณ z-score ของ CPM และ CPC เทียบ baseline 14 วัน · Warning ที่ 2σ, Critical ที่ 3σ · บันทึก alert ไว้ในเครื่อง</span>
+        <span class="lang-en">Z-score CPM and CPC against a 14-day baseline. Warning at 2σ, critical at 3σ. Alerts logged locally.</span></p></div>
+      <div class="feature"><span class="ico">💰</span><h3>Budget Pacing</h3><p>
+        <span class="lang-th">เพดาน Daily / Weekly / Monthly + auto-pause เมื่อใช้ครบ · ไม่มีทางเผลอใช้เกินงบ</span>
+        <span class="lang-en">Daily / weekly / monthly caps with optional auto-pause. Never blow the period budget.</span></p></div>
+      <div class="feature"><span class="ico">📋</span><h3>Bulk Operations</h3><p>
+        <span class="lang-th">เลือกแคมเปญหลายตัวพร้อมกัน → pause / enable / set-budget ทีเดียว — productivity เหมือน Excel</span>
+        <span class="lang-en">Multi-select campaigns and pause / enable / set-budget in one shot. Excel-flavored productivity.</span></p></div>
+      <div class="feature"><span class="ico">📤</span><h3>CSV Import / Export</h3><p>
+        <span class="lang-th">Round-trip ตาราง schedule rules ผ่าน Excel · export accounts และ audit log 10k แถวไปวิเคราะห์ offline</span>
+        <span class="lang-en">Round-trip schedule rules through Excel. Export accounts and 10k-row audit log for offline analysis.</span></p></div>
+      <div class="feature"><span class="ico">📈</span><h3>Performance Reports</h3><p>
+        <span class="lang-th">หน้าต่าง 1 / 7 / 14 / 30 วัน · สรุป per-campaign พร้อมคอลัมน์ CPC, CPM, CTR, ROAS</span>
+        <span class="lang-en">1-/7-/14-/30-day windows, per-campaign rollup with derived CPC, CPM, CTR, ROAS columns.</span></p></div>
+      <div class="feature"><span class="ico">🔥</span><h3>Dayparting Heatmap</h3><p>
+        <span class="lang-th">ตาราง 7×24 ชั่วโมง×วัน เลือกระบายสีตาม ROAS / CPM / CTR / Conversions · หาช่วงทอง</span>
+        <span class="lang-en">7×24 hour-by-day grid colored by ROAS / CPM / CTR / Conversions. Find the hot windows.</span></p></div>
+      <div class="feature"><span class="ico">📋</span><h3>Activity Log</h3><p>
+        <span class="lang-th">ทุก API call, scheduled action, retry, error · ค้นหาได้ · export ได้ · เก็บ default 30 วัน</span>
+        <span class="lang-en">Every API call, scheduled action, retry, and error — searchable, exportable, 30-day default retention.</span></p></div>
+      <div class="feature"><span class="ico">💾</span><h3>Backup &amp; Restore</h3><p>
+        <span class="lang-th">ZIP ไฟล์เดียว .ttkbak (DB + settings) · auto-snapshot ก่อน restore เผื่อย้อนกลับ</span>
+        <span class="lang-en">Single .ttkbak archive with DB + settings. Auto-snapshot before destructive restores.</span></p></div>
+      <div class="feature"><span class="ico">🩺</span><h3>Health Check</h3><p>
+        <span class="lang-th">ตรวจ SQLite, token store, Quartz, mock mode, disk · พาเนลเดียว คลิกเดียว</span>
+        <span class="lang-en">SQLite, token store, Quartz, mock mode, disk — one panel, one click.</span></p></div>
+      <div class="feature"><span class="ico">⚙️</span><h3>Settings</h3><p>
+        <span class="lang-th">แก้ App ID / Secret / Redirect URI / DB path / Mock mode · เซฟลง appsettings.local.json</span>
+        <span class="lang-en">Edit App ID, Secret, Redirect URI, DB path, mock mode. Persists to gitignored appsettings.local.json.</span></p></div>
+      <div class="feature"><span class="ico">⌨️</span><h3>Keyboard Shortcuts</h3><p>
+        <span class="lang-th">Ctrl+1..8 สลับหน้า · F5 รีเฟรช · Ctrl+, เปิด Settings · ออกแบบสำหรับ power user</span>
+        <span class="lang-en">Ctrl+1..8 to navigate, F5 to refresh, Ctrl+, for settings. Designed for power users.</span></p></div>
     </div>
   </div>
 </section>
 
 <section id="screenshots" style="background: linear-gradient(180deg, var(--bg-0), var(--bg-1));">
   <div class="container">
-    <h2 class="section-title">Inside the <span class="accent">app.</span></h2>
-    <p class="section-sub">Same Neon Lime palette as the desktop UI. Click a tab to switch the mock screenshot. For the full 30-screen vision visit <a href="mockups/">mockups/</a>.</p>
+    <h2 class="section-title">
+      <span class="lang-th">หน้าตา <span class="accent">ในแอปจริง.</span></span>
+      <span class="lang-en">Inside the <span class="accent">app.</span></span>
+    </h2>
+    <p class="section-sub">
+      <span class="lang-th">ใช้ palette Neon Lime เดียวกับ desktop app · คลิกแท็บเพื่อสลับหน้า · ดู vision เต็ม 30 หน้าจอที่ <a href="mockups/">mockups/</a></span>
+      <span class="lang-en">Same Neon Lime palette as the desktop UI. Click a tab to switch the mock screenshot. For the full 30-screen vision visit <a href="mockups/">mockups/</a>.</span>
+    </p>
 
     <div class="screens-tabs">
       <button class="active" data-target="ss-dashboard">Dashboard</button>
-      <button data-target="ss-rules">Schedules</button>
+      <button data-target="ss-rules"><span class="lang-th">Schedules</span><span class="lang-en">Schedules</span></button>
       <button data-target="ss-auto">Auto-Rules</button>
-      <button data-target="ss-reports">Reports</button>
+      <button data-target="ss-reports"><span class="lang-th">Reports</span><span class="lang-en">Reports</span></button>
       <button data-target="ss-heatmap">Heatmap</button>
-      <button data-target="ss-anomaly">Anomaly</button>
+      <button data-target="ss-anomaly"><span class="lang-th">Anomaly</span><span class="lang-en">Anomaly</span></button>
     </div>
 
     <div id="ss-dashboard" class="ss">
       <div class="screen-frame">
         <div class="titlebar"><img src="logottk.png" alt="TTK"><span class="accent">TTK Manager</span> · Dashboard
-          <span class="pill"><span class="dot"></span> Live · 3 accounts · 2 alerts</span></div>
+          <span class="pill"><span class="dot"></span><span class="lang-th">Live · 3 บัญชี · 2 alerts</span><span class="lang-en">Live · 3 accounts · 2 alerts</span></span></div>
         <div class="screen-body with-sidebar">
           <div class="sb">
             <div class="grp">Foundation</div>
@@ -395,13 +379,13 @@ footer a { color: var(--txt-2); }
           </div>
           <div class="content">
             <div class="kpi-row">
-              <div class="kpi"><div class="label">Today's spend</div><div class="value">฿18,420</div><div class="delta">▲ 12% vs yest.</div></div>
-              <div class="kpi"><div class="label">Avg CPM (7d)</div><div class="value">฿84</div><div class="delta">▼ steady</div></div>
-              <div class="kpi"><div class="label">Avg CPC (7d)</div><div class="value">฿2.31</div><div class="delta">▼ 8%</div></div>
+              <div class="kpi"><div class="label"><span class="lang-th">งบที่ใช้วันนี้</span><span class="lang-en">Today's spend</span></div><div class="value">฿18,420</div><div class="delta"><span class="lang-th">▲ 12% เทียบเมื่อวาน</span><span class="lang-en">▲ 12% vs yest.</span></div></div>
+              <div class="kpi"><div class="label"><span class="lang-th">CPM เฉลี่ย (7 วัน)</span><span class="lang-en">Avg CPM (7d)</span></div><div class="value">฿84</div><div class="delta"><span class="lang-th">▼ คงที่</span><span class="lang-en">▼ steady</span></div></div>
+              <div class="kpi"><div class="label"><span class="lang-th">CPC เฉลี่ย (7 วัน)</span><span class="lang-en">Avg CPC (7d)</span></div><div class="value">฿2.31</div><div class="delta">▼ 8%</div></div>
               <div class="kpi"><div class="label">ROAS (7d)</div><div class="value">3.2×</div><div class="delta">▲ 0.4×</div></div>
             </div>
             <table class="tbl">
-              <tr><th>Time</th><th>Action</th><th>Status</th><th>Detail</th></tr>
+              <tr><th><span class="lang-th">เวลา</span><span class="lang-en">Time</span></th><th><span class="lang-th">การกระทำ</span><span class="lang-en">Action</span></th><th>Status</th><th><span class="lang-th">รายละเอียด</span><span class="lang-en">Detail</span></th></tr>
               <tr><td>11:18:23</td><td>Pause</td><td><span class="tag green">OK</span></td><td>—</td></tr>
               <tr><td>10:00:01</td><td>SetBudget</td><td><span class="tag green">OK</span></td><td>budget=5000.00</td></tr>
               <tr><td>09:45:11</td><td>RefreshToken</td><td><span class="tag amber">Retry</span></td><td>HTTP 429 — backed off 1.4s</td></tr>
@@ -417,10 +401,10 @@ footer a { color: var(--txt-2); }
         <div class="titlebar"><img src="logottk.png" alt="TTK"><span class="accent">TTK Manager</span> · Schedules</div>
         <div class="screen-body">
           <table class="tbl">
-            <tr><th>Id</th><th>Name</th><th>Account</th><th>Campaign</th><th>Action</th><th>Cron</th><th>Next fire</th><th>On</th></tr>
-            <tr><td>#1</td><td>Peak hours boost</td><td>Songkran TH</td><td>camp_001</td><td><span class="tag lime">SetBudget ฿5,000</span></td><td class="mono">0 0 18 ? * MON-FRI</td><td>Today 18:00</td><td><span class="tag green">●</span></td></tr>
-            <tr><td>#2</td><td>Off-hours pause</td><td>Songkran TH</td><td>camp_001</td><td><span class="tag amber">Pause</span></td><td class="mono">0 0 22 * * ?</td><td>Today 22:00</td><td><span class="tag green">●</span></td></tr>
-            <tr><td>#3</td><td>Morning enable</td><td>Songkran TH</td><td>camp_001</td><td><span class="tag green">Enable</span></td><td class="mono">0 0 9 * * ?</td><td>Tomorrow 09:00</td><td><span class="tag green">●</span></td></tr>
+            <tr><th>Id</th><th><span class="lang-th">ชื่อ</span><span class="lang-en">Name</span></th><th><span class="lang-th">บัญชี</span><span class="lang-en">Account</span></th><th>Campaign</th><th>Action</th><th>Cron</th><th><span class="lang-th">ครั้งหน้า</span><span class="lang-en">Next fire</span></th><th>On</th></tr>
+            <tr><td>#1</td><td><span class="lang-th">เพิ่มงบช่วง peak</span><span class="lang-en">Peak hours boost</span></td><td>Songkran TH</td><td>camp_001</td><td><span class="tag lime">SetBudget ฿5,000</span></td><td class="mono">0 0 18 ? * MON-FRI</td><td><span class="lang-th">วันนี้ 18:00</span><span class="lang-en">Today 18:00</span></td><td><span class="tag green">●</span></td></tr>
+            <tr><td>#2</td><td><span class="lang-th">หยุดนอกเวลา</span><span class="lang-en">Off-hours pause</span></td><td>Songkran TH</td><td>camp_001</td><td><span class="tag amber">Pause</span></td><td class="mono">0 0 22 * * ?</td><td><span class="lang-th">วันนี้ 22:00</span><span class="lang-en">Today 22:00</span></td><td><span class="tag green">●</span></td></tr>
+            <tr><td>#3</td><td><span class="lang-th">เปิดตอนเช้า</span><span class="lang-en">Morning enable</span></td><td>Songkran TH</td><td>camp_001</td><td><span class="tag green">Enable</span></td><td class="mono">0 0 9 * * ?</td><td><span class="lang-th">พรุ่งนี้ 09:00</span><span class="lang-en">Tomorrow 09:00</span></td><td><span class="tag green">●</span></td></tr>
             <tr><td>#4</td><td>Beauty Q2 dayparting</td><td>Beauty Co.</td><td>camp_204</td><td><span class="tag lime">SetBudget $200</span></td><td class="mono">0 0 12 ? * SAT,SUN</td><td>Sat 12:00</td><td><span class="tag green">●</span></td></tr>
           </table>
         </div>
@@ -432,11 +416,11 @@ footer a { color: var(--txt-2); }
         <div class="titlebar"><img src="logottk.png" alt="TTK"><span class="accent">TTK Manager</span> · Auto-Rules</div>
         <div class="screen-body">
           <table class="tbl">
-            <tr><th>Name</th><th>Trigger</th><th>Action</th><th>Cooldown</th><th>Last fired</th><th>On</th></tr>
-            <tr><td>Pause if CPC explodes</td><td>CPC &gt; ฿8 for 60min</td><td><span class="tag amber">Pause campaign</span></td><td>3h</td><td>Yesterday 23:50</td><td><span class="tag green">●</span></td></tr>
-            <tr><td>Scale winners</td><td>ROAS ≥ 4× &amp; spend ≥ ฿2k for 24h</td><td><span class="tag lime">Increase budget +20%</span></td><td>24h</td><td>Today 09:00</td><td><span class="tag green">●</span></td></tr>
-            <tr><td>Sleep dormant</td><td>spend &lt; ฿200 in 48h</td><td><span class="tag amber">Pause ad group</span></td><td>48h</td><td>—</td><td><span class="tag green">●</span></td></tr>
-            <tr><td>Frequency cap</td><td>Frequency &gt; 4× for 24h</td><td><span class="tag amber">Pause</span></td><td>12h</td><td>—</td><td><span class="tag green">●</span></td></tr>
+            <tr><th><span class="lang-th">ชื่อ</span><span class="lang-en">Name</span></th><th>Trigger</th><th>Action</th><th>Cooldown</th><th><span class="lang-th">ยิงล่าสุด</span><span class="lang-en">Last fired</span></th><th>On</th></tr>
+            <tr><td><span class="lang-th">Pause ถ้า CPC พุ่ง</span><span class="lang-en">Pause if CPC explodes</span></td><td>CPC &gt; ฿8 for 60min</td><td><span class="tag amber">Pause campaign</span></td><td>3h</td><td><span class="lang-th">เมื่อวาน 23:50</span><span class="lang-en">Yesterday 23:50</span></td><td><span class="tag green">●</span></td></tr>
+            <tr><td><span class="lang-th">Scale ตัวที่ ROAS ดี</span><span class="lang-en">Scale winners</span></td><td>ROAS ≥ 4× &amp; spend ≥ ฿2k for 24h</td><td><span class="tag lime">Increase budget +20%</span></td><td>24h</td><td><span class="lang-th">วันนี้ 09:00</span><span class="lang-en">Today 09:00</span></td><td><span class="tag green">●</span></td></tr>
+            <tr><td><span class="lang-th">หยุดตัวที่นอน</span><span class="lang-en">Sleep dormant</span></td><td>spend &lt; ฿200 in 48h</td><td><span class="tag amber">Pause ad group</span></td><td>48h</td><td>—</td><td><span class="tag green">●</span></td></tr>
+            <tr><td><span class="lang-th">คุม Frequency</span><span class="lang-en">Frequency cap</span></td><td>Frequency &gt; 4× for 24h</td><td><span class="tag amber">Pause</span></td><td>12h</td><td>—</td><td><span class="tag green">●</span></td></tr>
           </table>
         </div>
       </div>
@@ -447,13 +431,13 @@ footer a { color: var(--txt-2); }
         <div class="titlebar"><img src="logottk.png" alt="TTK"><span class="accent">TTK Manager</span> · Reports</div>
         <div class="screen-body">
           <div class="kpi-row">
-            <div class="kpi"><div class="label">Spend</div><div class="value">฿412k</div></div>
+            <div class="kpi"><div class="label"><span class="lang-th">งบรวม</span><span class="lang-en">Spend</span></div><div class="value">฿412k</div></div>
             <div class="kpi"><div class="label">Impressions</div><div class="value">4.9M</div></div>
-            <div class="kpi"><div class="label">Avg CPM</div><div class="value">฿84</div></div>
+            <div class="kpi"><div class="label"><span class="lang-th">CPM เฉลี่ย</span><span class="lang-en">Avg CPM</span></div><div class="value">฿84</div></div>
             <div class="kpi"><div class="label">ROAS</div><div class="value">3.4×</div></div>
           </div>
           <table class="tbl">
-            <tr><th>Campaign</th><th>Spend</th><th>Imp.</th><th>Clicks</th><th>CTR</th><th>CPM</th><th>CPC</th><th>Conv.</th><th>ROAS</th></tr>
+            <tr><th>Campaign</th><th><span class="lang-th">งบ</span><span class="lang-en">Spend</span></th><th>Imp.</th><th>Clicks</th><th>CTR</th><th>CPM</th><th>CPC</th><th>Conv.</th><th>ROAS</th></tr>
             <tr><td>Songkran Push</td><td>฿180k</td><td>2.1M</td><td>40k</td><td>1.9%</td><td>฿82</td><td>฿4.5</td><td>1,520</td><td><span class="tag green">3.4×</span></td></tr>
             <tr><td>Always-on Retgt</td><td>฿95k</td><td>0.7M</td><td>22k</td><td>3.1%</td><td>฿62</td><td>฿4.3</td><td>1,140</td><td><span class="tag green">4.1×</span></td></tr>
             <tr><td>Test Lima Hook v3</td><td>฿28k</td><td>0.4M</td><td>2.2k</td><td>0.6%</td><td>฿104</td><td>฿12.6</td><td>40</td><td><span class="tag red">0.8×</span></td></tr>
@@ -467,7 +451,7 @@ footer a { color: var(--txt-2); }
         <div class="titlebar"><img src="logottk.png" alt="TTK"><span class="accent">TTK Manager</span> · Dayparting Heatmap</div>
         <div class="screen-body">
           <div class="heatmap-mini" id="hm"></div>
-          <div style="margin-top:8px; color: var(--txt-2); font-size: 11px;">30-day ROAS · darker green = higher · click any cell to create a rule for that hour/day</div>
+          <div style="margin-top:8px; color: var(--txt-2); font-size: 11px;"><span class="lang-th">ROAS 30 วัน · เขียวเข้ม = สูง · คลิกช่องไหนก็ได้เพื่อสร้าง rule สำหรับช่วงเวลานั้น</span><span class="lang-en">30-day ROAS · darker green = higher · click any cell to create a rule for that hour/day</span></div>
         </div>
       </div>
     </div>
@@ -477,11 +461,11 @@ footer a { color: var(--txt-2); }
         <div class="titlebar"><img src="logottk.png" alt="TTK"><span class="accent">TTK Manager</span> · Anomalies</div>
         <div class="screen-body">
           <table class="tbl">
-            <tr><th>Time</th><th>Severity</th><th>Source</th><th>Title</th><th>Body</th></tr>
-            <tr><td>11:32</td><td><span class="tag red">Critical</span></td><td>Anomaly</td><td>CPM anomaly on camp_001</td><td>Latest CPM ฿128 is 3.2σ above 14-day baseline</td></tr>
-            <tr><td>10:18</td><td><span class="tag amber">Warning</span></td><td>Anomaly</td><td>CPC anomaly on camp_204</td><td>Latest CPC $0.42 is 2.4σ above baseline</td></tr>
-            <tr><td>09:00</td><td><span class="tag amber">Warning</span></td><td>BudgetCap</td><td>Daily cap nearly hit</td><td>Spent ฿4,820 / ฿5,000 (96%)</td></tr>
-            <tr><td>Yest 23:50</td><td><span class="tag amber">Warning</span></td><td>AutoRule</td><td>Auto-rule fired: Pause if CPC explodes</td><td>Campaign camp_004 paused — CPC ฿12.6 &gt; ฿8 threshold</td></tr>
+            <tr><th><span class="lang-th">เวลา</span><span class="lang-en">Time</span></th><th><span class="lang-th">ระดับ</span><span class="lang-en">Severity</span></th><th><span class="lang-th">แหล่ง</span><span class="lang-en">Source</span></th><th><span class="lang-th">หัวข้อ</span><span class="lang-en">Title</span></th><th><span class="lang-th">รายละเอียด</span><span class="lang-en">Body</span></th></tr>
+            <tr><td>11:32</td><td><span class="tag red">Critical</span></td><td>Anomaly</td><td><span class="lang-th">CPM ผิดปกติที่ camp_001</span><span class="lang-en">CPM anomaly on camp_001</span></td><td><span class="lang-th">CPM ล่าสุด ฿128 สูงกว่า baseline 14 วัน 3.2σ</span><span class="lang-en">Latest CPM ฿128 is 3.2σ above 14-day baseline</span></td></tr>
+            <tr><td>10:18</td><td><span class="tag amber">Warning</span></td><td>Anomaly</td><td><span class="lang-th">CPC ผิดปกติที่ camp_204</span><span class="lang-en">CPC anomaly on camp_204</span></td><td><span class="lang-th">CPC ล่าสุด $0.42 สูงกว่า baseline 2.4σ</span><span class="lang-en">Latest CPC $0.42 is 2.4σ above baseline</span></td></tr>
+            <tr><td>09:00</td><td><span class="tag amber">Warning</span></td><td>BudgetCap</td><td><span class="lang-th">เพดานวันใกล้ครบ</span><span class="lang-en">Daily cap nearly hit</span></td><td><span class="lang-th">ใช้ ฿4,820 / ฿5,000 (96%)</span><span class="lang-en">Spent ฿4,820 / ฿5,000 (96%)</span></td></tr>
+            <tr><td><span class="lang-th">เมื่อวาน 23:50</span><span class="lang-en">Yest 23:50</span></td><td><span class="tag amber">Warning</span></td><td>AutoRule</td><td><span class="lang-th">Auto-rule ยิง: Pause ถ้า CPC พุ่ง</span><span class="lang-en">Auto-rule fired: Pause if CPC explodes</span></td><td><span class="lang-th">camp_004 ถูก pause — CPC ฿12.6 &gt; ฿8</span><span class="lang-en">Campaign camp_004 paused — CPC ฿12.6 &gt; ฿8 threshold</span></td></tr>
           </table>
         </div>
       </div>
@@ -491,42 +475,48 @@ footer a { color: var(--txt-2); }
 
 <section id="quickstart">
   <div class="container">
-    <h2 class="section-title">Get running in <span class="accent">5 minutes.</span></h2>
-    <p class="section-sub">.NET 9 SDK is the only requirement. The app is one .csproj — clone, build, run.</p>
+    <h2 class="section-title">
+      <span class="lang-th">เริ่มใช้งานใน <span class="accent">5 นาที.</span></span>
+      <span class="lang-en">Get running in <span class="accent">5 minutes.</span></span>
+    </h2>
+    <p class="section-sub">
+      <span class="lang-th">ต้องมีแค่ .NET 9 SDK · ตัวแอปเป็น single .csproj — clone, build, run</span>
+      <span class="lang-en">.NET 9 SDK is the only requirement. The app is one .csproj — clone, build, run.</span>
+    </p>
     <div class="qs-grid">
       <div class="qs-step">
-        <div class="num">Step 1</div>
-        <h3>Clone the repo</h3>
+        <div class="num"><span class="lang-th">ขั้นที่ 1</span><span class="lang-en">Step 1</span></div>
+        <h3><span class="lang-th">รับซอร์ส</span><span class="lang-en">Get the source</span></h3>
         <pre>cd ttkmanager</pre>
-        <p>Get the source from xman studio.</p>
+        <p><span class="lang-th">รับซอร์สมาจาก xman studio</span><span class="lang-en">Get the source from xman studio.</span></p>
       </div>
       <div class="qs-step">
-        <div class="num">Step 2</div>
-        <h3>Open in Visual Studio 2026 / Rider / VS Code</h3>
-        <p>Double-click <code>TTKManager.sln</code>, then F5. Or run from CLI.</p>
+        <div class="num"><span class="lang-th">ขั้นที่ 2</span><span class="lang-en">Step 2</span></div>
+        <h3><span class="lang-th">เปิดใน Visual Studio 2026 / Rider / VS Code</span><span class="lang-en">Open in Visual Studio 2026 / Rider / VS Code</span></h3>
+        <p><span class="lang-th">ดับเบิลคลิก <code>TTKManager.sln</code> แล้วกด F5 หรือรันจาก CLI</span><span class="lang-en">Double-click <code>TTKManager.sln</code>, then F5. Or run from CLI.</span></p>
         <pre>dotnet build TTKManager.sln</pre>
       </div>
       <div class="qs-step">
-        <div class="num">Step 3</div>
-        <h3>Try the mock data</h3>
-        <p>Default config runs in mock mode. Open <b>Anomaly Detector → Seed demo samples</b> to populate 14 days of synthetic metrics, then <b>Scan Now</b> to see real anomaly alerts.</p>
+        <div class="num"><span class="lang-th">ขั้นที่ 3</span><span class="lang-en">Step 3</span></div>
+        <h3><span class="lang-th">ลอง Demo Mode</span><span class="lang-en">Try Demo Mode</span></h3>
+        <p><span class="lang-th">เปิดแอปแล้วกด <b>▶ Try demo data</b> มุมขวาบน · progress dialog จะ seed 3 บัญชี · 7 แคมเปญ · 6 schedule rules · 5 auto-rules · 1.2k metric samples · 7 alerts · 32 audit entries ทั้งหมด flag เป็น demo · กด <b>▶ Switch to Live</b> เพื่อล้างทิ้ง</span><span class="lang-en">Open the app and click <b>▶ Try demo data</b> in the top bar. The progress dialog seeds 3 sample accounts, 7 campaigns, 6 schedule rules, 5 auto-rules, 1.2k metric samples, 7 alerts, and 32 audit entries — all flagged as demo. Click <b>▶ Switch to Live</b> to clear.</span></p>
       </div>
       <div class="qs-step">
-        <div class="num">Step 4</div>
-        <h3>Connect your real account</h3>
-        <p>Edit <code>src/TTKManager.App/appsettings.local.json.example</code>, save as <code>appsettings.local.json</code>, set your <code>TikTokAppId</code>, <code>TikTokAppSecret</code>, and flip <code>UseMockApi: false</code>. Restart the app.</p>
+        <div class="num"><span class="lang-th">ขั้นที่ 4</span><span class="lang-en">Step 4</span></div>
+        <h3><span class="lang-th">เชื่อมบัญชีจริง</span><span class="lang-en">Connect a real account</span></h3>
+        <p><span class="lang-th">copy <code>appsettings.local.json.example</code> เป็น <code>appsettings.local.json</code> · ใส่ <code>TikTokAppId</code> + <code>TikTokAppSecret</code> · ตั้ง <code>UseMockApi: false</code> · รีสตาร์ตแอป</span><span class="lang-en">Copy <code>appsettings.local.json.example</code> to <code>appsettings.local.json</code>, set your <code>TikTokAppId</code> and <code>TikTokAppSecret</code>, flip <code>UseMockApi: false</code>, restart.</span></p>
       </div>
       <div class="qs-step">
-        <div class="num">Step 5</div>
-        <h3>Build a portable .exe</h3>
+        <div class="num"><span class="lang-th">ขั้นที่ 5</span><span class="lang-en">Step 5</span></div>
+        <h3><span class="lang-th">สร้าง .exe portable</span><span class="lang-en">Build a portable .exe</span></h3>
         <pre>./publish.cmd          # Windows
 ./publish.sh           # Bash / WSL</pre>
-        <p>Output: <code>publish/TTKManager.exe</code>. Drop on a USB stick — no install, no .NET runtime required on target.</p>
+        <p><span class="lang-th">ผลลัพธ์: <code>publish/TTKManager.exe</code> · เอาใส่ USB ไปไหนก็ได้ · ไม่ต้องลง .NET runtime</span><span class="lang-en">Output: <code>publish/TTKManager.exe</code>. Drop on a USB stick — no install, no .NET runtime required on target.</span></p>
       </div>
       <div class="qs-step">
-        <div class="num">Step 6</div>
-        <h3>Schedule your first rule</h3>
-        <p>Connect an account → <b>Schedules</b> tab → pick a campaign → choose a cron preset like <i>"Weekdays at 18:00"</i> → set budget → <b>Add Rule</b>. The rule fires automatically.</p>
+        <div class="num"><span class="lang-th">ขั้นที่ 6</span><span class="lang-en">Step 6</span></div>
+        <h3><span class="lang-th">ตั้ง rule แรก</span><span class="lang-en">Schedule your first rule</span></h3>
+        <p><span class="lang-th">เชื่อมบัญชี → tab <b>Schedules</b> → เลือกแคมเปญ → เลือก preset เช่น <i>"Weekdays at 18:00"</i> → ตั้งงบ → <b>Add Rule</b> · rule จะยิงตามเวลาอัตโนมัติ</span><span class="lang-en">Connect an account → <b>Schedules</b> tab → pick a campaign → choose a cron preset like <i>"Weekdays at 18:00"</i> → set budget → <b>Add Rule</b>. The rule fires automatically.</span></p>
       </div>
     </div>
   </div>
@@ -534,66 +524,78 @@ footer a { color: var(--txt-2); }
 
 <section id="tech" style="background: var(--bg-1);">
   <div class="container">
-    <h2 class="section-title">Built on a <span class="accent">solid stack.</span></h2>
-    <p class="section-sub">No frameworks-of-the-month. Boring tech that has been production-ready for years.</p>
+    <h2 class="section-title">
+      <span class="lang-th">ใช้ stack ที่ <span class="accent">ทนทาน.</span></span>
+      <span class="lang-en">Built on a <span class="accent">solid stack.</span></span>
+    </h2>
+    <p class="section-sub">
+      <span class="lang-th">ไม่ใช้ framework แฟชั่น · เลือกของเก่าแก่ที่ใช้ใน production มาแล้วหลายปี</span>
+      <span class="lang-en">No frameworks-of-the-month. Boring tech that has been production-ready for years.</span>
+    </p>
     <div class="tech-stack">
-      <div class="tech-item"><span class="ico">🟪</span><div class="name">.NET 9</div><div class="desc">LTS-track runtime</div></div>
-      <div class="tech-item"><span class="ico">🎨</span><div class="name">Avalonia 12</div><div class="desc">XAML UI · cross-platform</div></div>
-      <div class="tech-item"><span class="ico">🗄️</span><div class="name">SQLite + Dapper</div><div class="desc">Single-file DB · zero config</div></div>
-      <div class="tech-item"><span class="ico">⏱️</span><div class="name">Quartz.NET 3</div><div class="desc">In-process cron scheduler</div></div>
-      <div class="tech-item"><span class="ico">🛡️</span><div class="name">DPAPI + AES-GCM</div><div class="desc">Token encryption at rest</div></div>
-      <div class="tech-item"><span class="ico">🔁</span><div class="name">Polly v8</div><div class="desc">Retry · backoff · jitter</div></div>
-      <div class="tech-item"><span class="ico">📦</span><div class="name">CommunityToolkit.Mvvm</div><div class="desc">INPC base · Async commands</div></div>
-      <div class="tech-item"><span class="ico">🚀</span><div class="name">Self-contained</div><div class="desc">Single-file .exe · no install</div></div>
+      <div class="tech-item"><span class="ico">🟪</span><div class="name">.NET 9</div><div class="desc"><span class="lang-th">runtime สาย LTS</span><span class="lang-en">LTS-track runtime</span></div></div>
+      <div class="tech-item"><span class="ico">🎨</span><div class="name">Avalonia 12</div><div class="desc"><span class="lang-th">XAML UI · cross-platform</span><span class="lang-en">XAML UI · cross-platform</span></div></div>
+      <div class="tech-item"><span class="ico">🗄️</span><div class="name">SQLite + Dapper</div><div class="desc"><span class="lang-th">DB ไฟล์เดียว · zero config</span><span class="lang-en">Single-file DB · zero config</span></div></div>
+      <div class="tech-item"><span class="ico">⏱️</span><div class="name">Quartz.NET 3</div><div class="desc"><span class="lang-th">cron scheduler ในแอป</span><span class="lang-en">In-process cron scheduler</span></div></div>
+      <div class="tech-item"><span class="ico">🛡️</span><div class="name">DPAPI + AES-GCM</div><div class="desc"><span class="lang-th">เข้ารหัส token ในเครื่อง</span><span class="lang-en">Token encryption at rest</span></div></div>
+      <div class="tech-item"><span class="ico">🔁</span><div class="name">Polly v8</div><div class="desc"><span class="lang-th">Retry · backoff · jitter</span><span class="lang-en">Retry · backoff · jitter</span></div></div>
+      <div class="tech-item"><span class="ico">📦</span><div class="name">CommunityToolkit.Mvvm</div><div class="desc"><span class="lang-th">INPC · Async commands</span><span class="lang-en">INPC base · Async commands</span></div></div>
+      <div class="tech-item"><span class="ico">🚀</span><div class="name">Self-contained</div><div class="desc"><span class="lang-th">.exe เดียว · ไม่ต้อง install</span><span class="lang-en">Single-file .exe · no install</span></div></div>
     </div>
   </div>
 </section>
 
 <section id="roadmap">
   <div class="container">
-    <h2 class="section-title">Where it's <span class="accent">going.</span></h2>
-    <p class="section-sub">Phase 1 ships v0.1 today. Phase 2–4 unlock incrementally as the Marketing API approval lands and product–market fit is validated.</p>
+    <h2 class="section-title">
+      <span class="lang-th">ทิศทางในอนาคต.</span>
+      <span class="lang-en">Where it's <span class="accent">going.</span></span>
+    </h2>
+    <p class="section-sub">
+      <span class="lang-th">Phase 1 ออก v0.1 วันนี้ · Phase 2–4 ทยอยเปิดเมื่อ Marketing API approve และมีลูกค้าใช้งานจริง</span>
+      <span class="lang-en">Phase 1 ships v0.1 today. Phase 2–4 unlock incrementally as the Marketing API approval lands and product–market fit is validated.</span>
+    </p>
     <div class="roadmap">
       <div class="phase" data-p="1">
         <span class="tag-phase">P1 · Foundation</span>
-        <h3>v0.1 · today</h3>
+        <h3><span class="lang-th">v0.1 · วันนี้</span><span class="lang-en">v0.1 · today</span></h3>
         <ul>
-          <li>Dashboard, Accounts, Campaigns</li>
-          <li>Schedules + Activity Log</li>
-          <li>Settings, Backup, Health</li>
-          <li>Single-file portable .exe</li>
+          <li><span class="lang-th">Dashboard, Accounts, Campaigns</span><span class="lang-en">Dashboard, Accounts, Campaigns</span></li>
+          <li><span class="lang-th">Schedules + Activity Log</span><span class="lang-en">Schedules + Activity Log</span></li>
+          <li><span class="lang-th">Settings, Backup, Health, License</span><span class="lang-en">Settings, Backup, Health, License</span></li>
+          <li><span class="lang-th">Single-file portable .exe</span><span class="lang-en">Single-file portable .exe</span></li>
         </ul>
       </div>
       <div class="phase" data-p="2">
         <span class="tag-phase">P2 · Pro</span>
-        <h3>post-API approval</h3>
+        <h3><span class="lang-th">หลัง API approve</span><span class="lang-en">post-API approval</span></h3>
         <ul>
-          <li>Auto-Rules engine (live)</li>
-          <li>Anomaly Detector (live)</li>
-          <li>Budget Pacing (live)</li>
-          <li>Reports, Heatmap, Bulk, CSV</li>
-          <li>Creatives, A/B Tests, Audiences</li>
+          <li><span class="lang-th">Auto-Rules engine (live)</span><span class="lang-en">Auto-Rules engine (live)</span></li>
+          <li><span class="lang-th">Anomaly Detector (live)</span><span class="lang-en">Anomaly Detector (live)</span></li>
+          <li><span class="lang-th">Budget Pacing (live)</span><span class="lang-en">Budget Pacing (live)</span></li>
+          <li><span class="lang-th">Reports, Heatmap, Bulk, CSV</span><span class="lang-en">Reports, Heatmap, Bulk, CSV</span></li>
+          <li><span class="lang-th">Creatives, A/B Tests, Audiences</span><span class="lang-en">Creatives, A/B Tests, Audiences</span></li>
         </ul>
       </div>
       <div class="phase" data-p="3">
         <span class="tag-phase">P3 · Advanced</span>
-        <h3>integrations</h3>
+        <h3><span class="lang-th">integrations</span><span class="lang-en">integrations</span></h3>
         <ul>
           <li>Pixel + Funnel + Fatigue</li>
           <li>Competitor Spy · Hashtag Tracker</li>
           <li>Bid Tester · Multi-currency</li>
           <li>Webhooks · Slack · Email</li>
-          <li>Scheduled reports · Quota monitor</li>
+          <li><span class="lang-th">Scheduled reports · Quota monitor</span><span class="lang-en">Scheduled reports · Quota monitor</span></li>
         </ul>
       </div>
       <div class="phase" data-p="4">
         <span class="tag-phase">P4 · SaaS</span>
-        <h3>once 10+ paying users</h3>
+        <h3><span class="lang-th">เมื่อมีลูกค้าจ่าย 10+ ราย</span><span class="lang-en">once 10+ paying users</span></h3>
         <ul>
-          <li>Multi-tenant cloud version</li>
-          <li>Web dashboard</li>
-          <li>Team collaboration</li>
-          <li>Tech Partner status with TikTok</li>
+          <li><span class="lang-th">เวอร์ชัน Cloud multi-tenant</span><span class="lang-en">Multi-tenant cloud version</span></li>
+          <li><span class="lang-th">Web dashboard</span><span class="lang-en">Web dashboard</span></li>
+          <li><span class="lang-th">Team collaboration</span><span class="lang-en">Team collaboration</span></li>
+          <li><span class="lang-th">สถานะ Tech Partner กับ TikTok</span><span class="lang-en">Tech Partner status with TikTok</span></li>
         </ul>
       </div>
     </div>
@@ -602,32 +604,52 @@ footer a { color: var(--txt-2); }
 
 <section style="padding: 50px 0; background: linear-gradient(135deg, rgba(163,230,53,0.06), transparent);">
   <div class="container" style="text-align:center;">
-    <h2 class="section-title" style="margin-bottom: 16px;">Ready to ship?</h2>
+    <h2 class="section-title" style="margin-bottom: 16px;"><span class="lang-th">พร้อมใช้งานแล้ว?</span><span class="lang-en">Ready to ship?</span></h2>
     <div class="cta-row" style="justify-content:center; display:flex; gap:12px; flex-wrap:wrap;">
-      <a href="https://xman4289.com" class="btn-primary" style="padding:12px 22px; border-radius:8px; background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3)); color:#0a1808; font-weight:600;">▸ Visit xman4289.com</a>
-      <a href="mockups/" class="btn-secondary" style="padding:12px 22px; border-radius:8px; background: var(--bg-elev); border: 1px solid var(--border-2); color: var(--txt-1);">↗ Browse all 30 mockups</a>
-      <a href="#quickstart" class="btn-secondary" style="padding:12px 22px; border-radius:8px; background: var(--bg-elev); border: 1px solid var(--border-2); color: var(--txt-1);">▸ Quick start</a>
+      <a href="https://xman4289.com" class="btn-primary" style="padding:12px 22px; border-radius:8px; background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3)); color:#0a1808; font-weight:600;"><span class="lang-th">▸ ไปที่ xman4289.com</span><span class="lang-en">▸ Visit xman4289.com</span></a>
+      <a href="mockups/" class="btn-secondary" style="padding:12px 22px; border-radius:8px; background: var(--bg-elev); border: 1px solid var(--border-2); color: var(--txt-1);"><span class="lang-th">↗ ดู Mockup ทั้ง 30 หน้า</span><span class="lang-en">↗ Browse all 30 mockups</span></a>
+      <a href="#quickstart" class="btn-secondary" style="padding:12px 22px; border-radius:8px; background: var(--bg-elev); border: 1px solid var(--border-2); color: var(--txt-1);"><span class="lang-th">▸ เริ่มใช้งาน</span><span class="lang-en">▸ Quick start</span></a>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="container row">
-    <div>© xman studio · MIT (planned) · v0.1.0</div>
+    <div>© xman studio · v0.1.0</div>
     <div>
       <a href="https://xman4289.com">xman4289.com</a> ·
-      <a href="mockups/">Mockups</a> ·
+      <a href="mockups/"><span class="lang-th">Mockup</span><span class="lang-en">Mockups</span></a> ·
       <a href="callback.html">OAuth callback</a>
     </div>
   </div>
 </footer>
 
 <script>
+(function () {
+  // Default: Thai for th-* browsers, English otherwise. localStorage overrides.
+  const stored = localStorage.getItem('ttk-lang');
+  const browser = (navigator.language || 'en').toLowerCase();
+  let initial = stored || (browser.startsWith('th') ? 'th' : 'en');
+  applyLang(initial);
+
+  document.getElementById('lang-th-btn')?.addEventListener('click', () => applyLang('th'));
+  document.getElementById('lang-en-btn')?.addEventListener('click', () => applyLang('en'));
+
+  function applyLang(l) {
+    document.body.classList.toggle('use-th', l === 'th');
+    document.body.classList.toggle('use-en', l === 'en');
+    document.documentElement.setAttribute('lang', l);
+    document.getElementById('lang-th-btn')?.classList.toggle('active', l === 'th');
+    document.getElementById('lang-en-btn')?.classList.toggle('active', l === 'en');
+    localStorage.setItem('ttk-lang', l);
+  }
+})();
+
 // Heatmap mini
 (function () {
   const hm = document.getElementById('hm');
   if (!hm) return;
-  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const days = ['จ','อ','พ','พฤ','ศ','ส','อา'];
   const seed = [
     [0.0,0.0,0.0,0.0,0.1,0.2,0.3,0.5,0.7,0.7,0.5,0.4,0.4,0.4,0.5,0.7,0.85,0.85,0.85,0.65,0.5,0.3,0.15,0.05],
     [0.0,0.0,0.0,0.0,0.1,0.2,0.4,0.5,0.5,0.5,0.4,0.4,0.4,0.5,0.55,0.7,0.85,0.85,0.85,0.7,0.5,0.3,0.15,0.05],

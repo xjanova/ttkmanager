@@ -1,75 +1,127 @@
 <!doctype html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="utf-8">
-  <title>TTKManager — OAuth Callback</title>
+  <title>TTK Manager — OAuth Callback</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="logottk.png" type="image/png">
   <style>
-    body { font-family: system-ui, -apple-system, sans-serif; max-width: 640px; margin: 4rem auto; padding: 0 1rem; color: #222; line-height: 1.5; }
-    h1 { font-weight: 600; margin-bottom: 0.4rem; }
-    .box { background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 8px; padding: 1rem; margin: 1rem 0; word-break: break-all; }
-    .code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.05em; }
-    button { background: #fe2c55; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 1em; cursor: pointer; }
-    button:hover { background: #d6203f; }
+    :root {
+      --bg-0: #050709; --bg-1: #070b0d; --bg-card: #0f1a1c; --bg-elev: #162226;
+      --accent: #a3e635; --accent-3: #65a30d; --accent-light: #bef264;
+      --txt-1: #ecfccb; --txt-2: #94a3b8; --txt-3: #64748b;
+      --border: #1f2e2a; --ok: #22c55e; --err: #ef4444;
+    }
+    body { background: var(--bg-0); color: var(--txt-1);
+      font-family: 'IBM Plex Sans Thai', 'Inter', system-ui, -apple-system, 'Sarabun', sans-serif;
+      max-width: 720px; margin: 3rem auto; padding: 0 1.2rem; line-height: 1.6; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin-bottom: 14px; }
+    .header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; }
+    .header img { width: 44px; height: 44px; }
+    .header h1 { font-weight: 700; font-size: 22px; margin: 0; color: var(--accent); }
+    .header .sub { font-size: 12px; color: var(--txt-2); margin-top: 2px; }
+    .box { background: var(--bg-elev); border: 1px solid var(--border); border-radius: 8px;
+      padding: 14px; margin: 12px 0; word-break: break-all; }
+    .code { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-size: 1em; color: var(--accent-light); }
+    button { background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3));
+      color: #0a1808; border: 0; padding: 10px 20px; border-radius: 6px;
+      font-size: 14px; font-weight: 600; cursor: pointer; }
+    button:hover { opacity: 0.9; }
     button:active { transform: translateY(1px); }
-    .ok { color: #008a00; font-weight: 600; }
-    .err { color: #c00; font-weight: 600; }
-    .hint { color: #555; font-size: 0.92em; }
+    .ok { color: var(--accent); font-weight: 600; }
+    .err { color: var(--err); font-weight: 600; }
+    .hint { color: var(--txt-2); font-size: 0.92em; }
+    .lang-pick { float: right; font-size: 11px; }
+    .lang-pick button { background: var(--bg-elev); color: var(--txt-2); padding: 4px 10px; border: 1px solid var(--border); }
+    .lang-pick button.active { background: var(--accent); color: #0a1808; }
+    body.use-th .lang-en { display: none !important; }
+    body.use-en .lang-th { display: none !important; }
   </style>
 </head>
-<body>
-  <h1>TTKManager — OAuth Callback</h1>
-  <p class="hint">Redirect target for the TikTok Marketing API authorization flow.</p>
+<body class="use-th">
+  <div class="lang-pick">
+    <button id="th-btn" class="active">TH</button>
+    <button id="en-btn">EN</button>
+  </div>
+  <div class="header">
+    <img src="logottk.png" alt="TTK">
+    <div>
+      <h1>TTK Manager</h1>
+      <div class="sub"><span class="lang-th">หน้า OAuth callback สำหรับเชื่อมบัญชี TikTok Ads</span><span class="lang-en">OAuth callback page for the TikTok Marketing API flow</span></div>
+    </div>
+  </div>
 
-  <div id="status">Reading authorization code…</div>
-  <div id="content"></div>
+  <div class="card">
+    <div id="status">
+      <span class="lang-th">กำลังอ่าน authorization code…</span>
+      <span class="lang-en">Reading authorization code…</span>
+    </div>
+    <div id="content"></div>
+  </div>
 
   <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var code = params.get('auth_code') || params.get('code');
-      var state = params.get('state') || '';
-      var error = params.get('error') || params.get('error_description');
-      var status = document.getElementById('status');
-      var content = document.getElementById('content');
+  (function () {
+    var stored = localStorage.getItem('ttk-lang');
+    var browser = (navigator.language || 'en').toLowerCase();
+    setLang(stored || (browser.startsWith('th') ? 'th' : 'en'));
+    document.getElementById('th-btn').addEventListener('click', function () { setLang('th'); });
+    document.getElementById('en-btn').addEventListener('click', function () { setLang('en'); });
+    function setLang(l) {
+      document.body.classList.toggle('use-th', l === 'th');
+      document.body.classList.toggle('use-en', l === 'en');
+      document.documentElement.setAttribute('lang', l);
+      document.getElementById('th-btn').classList.toggle('active', l === 'th');
+      document.getElementById('en-btn').classList.toggle('active', l === 'en');
+      localStorage.setItem('ttk-lang', l);
+    }
+  })();
 
-      function escapeHtml(s) {
-        return String(s).replace(/[&<>"']/g, function (c) {
-          return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
-        });
-      }
+  (function () {
+    var params = new URLSearchParams(window.location.search);
+    var code = params.get('auth_code') || params.get('code');
+    var state = params.get('state') || '';
+    var error = params.get('error') || params.get('error_description');
+    var status = document.getElementById('status');
+    var content = document.getElementById('content');
 
-      if (error) {
-        status.innerHTML = '<span class="err">Authorization failed.</span>';
-        content.innerHTML = '<div class="box code">' + escapeHtml(error) + '</div>' +
-          '<p class="hint">Close this tab and try connecting again from TTKManager.</p>';
-        return;
-      }
-
-      if (!code) {
-        status.innerHTML = '<span class="err">No authorization code received.</span>';
-        content.innerHTML = '<p class="hint">This page expects <code>?auth_code=...</code> or <code>?code=...</code> in the URL. ' +
-          'If you opened it directly, please initiate the connection from TTKManager.</p>';
-        return;
-      }
-
-      status.innerHTML = '<span class="ok">Authorization received.</span> Copy the code below and paste it into TTKManager.';
-      content.innerHTML =
-        '<div class="box code" id="codeBox">' + escapeHtml(code) + '</div>' +
-        '<button id="copyBtn">Copy code</button>' +
-        (state ? '<p class="hint">State: <code>' + escapeHtml(state) + '</code></p>' : '') +
-        '<p class="hint">After pasting into TTKManager you can close this tab.</p>';
-
-      document.getElementById('copyBtn').addEventListener('click', function () {
-        var btn = this;
-        navigator.clipboard.writeText(code).then(function () {
-          btn.textContent = 'Copied!';
-          setTimeout(function () { btn.textContent = 'Copy code'; }, 1500);
-        }).catch(function () {
-          btn.textContent = 'Copy failed — select manually';
-        });
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
       });
-    })();
+    }
+
+    if (error) {
+      status.innerHTML = '<span class="err"><span class="lang-th">การเข้าสู่ระบบล้มเหลว</span><span class="lang-en">Authorization failed.</span></span>';
+      content.innerHTML = '<div class="box code">' + escapeHtml(error) + '</div>' +
+        '<p class="hint"><span class="lang-th">ปิดแท็บนี้แล้วลองเชื่อมต่อใหม่จาก TTK Manager</span><span class="lang-en">Close this tab and try connecting again from TTK Manager.</span></p>';
+      return;
+    }
+
+    if (!code) {
+      status.innerHTML = '<span class="err"><span class="lang-th">ไม่ได้รับ authorization code</span><span class="lang-en">No authorization code received.</span></span>';
+      content.innerHTML = '<p class="hint"><span class="lang-th">หน้านี้ต้องมี <code>?auth_code=...</code> หรือ <code>?code=...</code> ใน URL · ถ้าคุณเปิดเองโดยตรง ให้กลับไปกดปุ่มเชื่อมต่อจากแอป TTK Manager</span><span class="lang-en">This page expects <code>?auth_code=...</code> or <code>?code=...</code> in the URL. If you opened it directly, please initiate the connection from TTK Manager.</span></p>';
+      return;
+    }
+
+    status.innerHTML = '<span class="ok"><span class="lang-th">รับ code สำเร็จ</span><span class="lang-en">Authorization received.</span></span> <span class="lang-th">copy code ด้านล่างไปวางใน TTK Manager</span><span class="lang-en">Copy the code below and paste it into TTK Manager.</span>';
+    content.innerHTML =
+      '<div class="box code" id="codeBox">' + escapeHtml(code) + '</div>' +
+      '<button id="copyBtn"><span class="lang-th">📋 Copy code</span><span class="lang-en">📋 Copy code</span></button>' +
+      (state ? '<p class="hint">State: <code>' + escapeHtml(state) + '</code></p>' : '') +
+      '<p class="hint"><span class="lang-th">เมื่อ paste ลงในแอปเรียบร้อยแล้วปิดแท็บนี้ได้เลย</span><span class="lang-en">After pasting into TTK Manager you can close this tab.</span></p>';
+
+    document.getElementById('copyBtn').addEventListener('click', function () {
+      var btn = this;
+      navigator.clipboard.writeText(code).then(function () {
+        btn.innerHTML = '<span class="lang-th">✓ คัดลอกแล้ว</span><span class="lang-en">✓ Copied!</span>';
+        setTimeout(function () {
+          btn.innerHTML = '<span class="lang-th">📋 Copy code</span><span class="lang-en">📋 Copy code</span>';
+        }, 1500);
+      }).catch(function () {
+        btn.innerHTML = '<span class="lang-th">คัดลอกไม่ได้ — เลือกเอง</span><span class="lang-en">Copy failed — select manually</span>';
+      });
+    });
+  })();
   </script>
 </body>
 </html>
