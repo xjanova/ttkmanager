@@ -1,0 +1,1364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TTK Manager — God-Tier Vision Mockups</title>
+<style>
+:root {
+  --bg-0: #050709;
+  --bg-1: #070b0d;
+  --bg-2: #0c1417;
+  --bg-3: #121b1f;
+  --bg-card: #0f1a1c;
+  --bg-elev: #162226;
+  --accent: #a3e635;
+  --accent-2: #84cc16;
+  --accent-3: #65a30d;
+  --accent-light: #bef264;
+  --accent-muted: rgba(163,230,53,0.10);
+  --danger: #ef4444;
+  --warn: #f59e0b;
+  --ok: #22c55e;
+  --info: #22d3ee;
+  --txt-1: #ecfccb;
+  --txt-2: #94a3b8;
+  --txt-3: #64748b;
+  --border: #1f2e2a;
+  --border-2: #2f4438;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg-0); color: var(--txt-1);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px; line-height: 1.5; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-light); }
+code, .mono { font-family: 'JetBrains Mono', Consolas, Menlo, monospace; font-size: 12px; }
+
+.app { display: grid; grid-template-columns: 280px 1fr; min-height: 100vh; }
+
+.sidebar {
+  background: linear-gradient(180deg, var(--bg-1), var(--bg-0));
+  border-right: 1px solid var(--border);
+  padding: 18px 12px;
+  position: sticky; top: 0; max-height: 100vh; overflow-y: auto;
+}
+.sidebar h1 { font-size: 16px; margin: 0 0 4px 0; display: flex; align-items: center; gap: 10px; }
+.sidebar h1 .logo {
+  width: 32px; height: 32px;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3));
+  border-radius: 8px; display: grid; place-items: center;
+  color: #0a1808; font-weight: 900; font-size: 14px;
+  box-shadow: 0 0 12px rgba(163,230,53,0.4);
+}
+.sidebar .sub { color: var(--txt-2); font-size: 11px; margin-bottom: 18px; }
+.sidebar .group { color: var(--accent-light); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+  margin: 14px 8px 6px; }
+.sidebar .nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-radius: 6px;
+  color: var(--txt-2); font-size: 13px;
+  transition: all 0.15s;
+}
+.sidebar .nav-item:hover { background: var(--bg-2); color: var(--txt-1); }
+.sidebar .nav-item .ico { width: 16px; opacity: 0.8; }
+.sidebar .nav-item .badge { margin-left: auto; font-size: 10px; padding: 2px 6px; border-radius: 8px;
+  background: var(--bg-3); color: var(--txt-3); }
+.sidebar .nav-item .badge.p1 { background: rgba(163,230,53,0.15); color: var(--accent-light); }
+.sidebar .nav-item .badge.p2 { background: rgba(34,211,238,0.15); color: var(--info); }
+.sidebar .nav-item .badge.p3 { background: rgba(245,158,11,0.15); color: var(--warn); }
+.sidebar .nav-item .badge.p4 { background: rgba(148,163,184,0.15); color: var(--txt-2); }
+
+.main { padding: 20px 28px 80px; max-width: 1200px; }
+.intro {
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, rgba(163,230,53,0.08), rgba(163,230,53,0.0));
+  border-radius: 12px; padding: 22px 24px; margin-bottom: 28px;
+}
+.intro h2 { margin: 0 0 6px 0; font-size: 22px; color: var(--accent); }
+.intro p { margin: 4px 0; color: var(--txt-2); }
+.intro .legend { display: flex; gap: 14px; margin-top: 14px; flex-wrap: wrap; }
+.intro .legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--txt-2); }
+.intro .legend .dot { width: 8px; height: 8px; border-radius: 50%; }
+
+.screen {
+  border: 1px solid var(--border); background: var(--bg-card);
+  border-radius: 12px; padding: 22px 24px; margin-bottom: 24px;
+}
+.screen > h3 {
+  margin: 0 0 4px 0; font-size: 18px; color: var(--accent);
+  display: flex; align-items: center; gap: 10px;
+}
+.screen > h3 .num { font-size: 12px; padding: 2px 8px; border-radius: 10px; background: var(--bg-3); color: var(--txt-2); }
+.screen > p.hint { color: var(--txt-2); margin: 4px 0 16px 0; font-size: 13px; }
+
+.fake-app {
+  background: var(--bg-1); border: 1px solid var(--border); border-radius: 8px;
+  overflow: hidden; margin-bottom: 14px;
+}
+.fake-app .titlebar {
+  background: linear-gradient(90deg, var(--bg-1), var(--bg-2), var(--bg-3));
+  border-bottom: 1px solid var(--border); padding: 8px 14px;
+  display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--txt-2);
+}
+.fake-app .titlebar .logo {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, var(--accent-light), var(--accent-3));
+  border-radius: 5px; display: grid; place-items: center;
+  font-weight: 900; font-size: 10px; color: #0a1808;
+}
+.fake-app .titlebar .accent-text { color: var(--accent); font-weight: 600; }
+.fake-app .titlebar .pill { margin-left: auto; padding: 3px 10px; border-radius: 12px;
+  background: var(--bg-3); border: 1px solid var(--border); font-size: 11px;
+  display: flex; align-items: center; gap: 6px;
+}
+.fake-app .titlebar .pill .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; }
+.fake-app .body { padding: 16px; }
+.fake-app .toolbar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  background: var(--bg-2); border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px; margin-bottom: 12px;
+}
+
+.btn {
+  padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 500;
+  border: 1px solid var(--border-2); background: var(--bg-elev); color: var(--txt-1);
+  cursor: pointer;
+}
+.btn.accent {
+  background: linear-gradient(135deg, var(--accent-light), var(--accent), var(--accent-3));
+  color: #0a1808; border-color: var(--accent-3); font-weight: 600;
+}
+.btn.danger { background: linear-gradient(135deg, var(--danger), #b91c1c); color: white; border-color: #b91c1c; }
+.btn.ghost { background: transparent; }
+
+.input { background: var(--bg-2); border: 1px solid var(--border-2); border-radius: 6px;
+  padding: 6px 10px; color: var(--txt-1); font-size: 12px; min-width: 200px; }
+.input:focus { outline: 1px solid var(--accent); }
+
+.card-stat {
+  border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px;
+  background: linear-gradient(180deg, var(--bg-elev), var(--bg-card));
+}
+.card-stat .label { color: var(--txt-2); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+.card-stat .value { color: var(--accent); font-size: 22px; font-weight: 700; margin: 4px 0 2px; }
+.card-stat .delta { font-size: 11px; color: var(--ok); }
+.card-stat .delta.neg { color: var(--danger); }
+
+.grid-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 14px; }
+
+.tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.tbl th { text-align: left; padding: 8px 10px; color: var(--accent-light);
+  border-bottom: 1px solid var(--border); background: var(--bg-elev);
+  font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+.tbl td { padding: 8px 10px; border-bottom: 1px solid var(--border); color: var(--txt-1); }
+.tbl tr:hover td { background: rgba(163,230,53,0.04); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+.tag.green { background: rgba(34,197,94,0.15); color: var(--ok); }
+.tag.red { background: rgba(239,68,68,0.15); color: var(--danger); }
+.tag.amber { background: rgba(245,158,11,0.15); color: var(--warn); }
+.tag.cyan { background: rgba(34,211,238,0.15); color: var(--info); }
+.tag.lime { background: rgba(163,230,53,0.15); color: var(--accent-light); }
+.tag.dim { background: var(--bg-3); color: var(--txt-2); }
+
+.row { display: flex; gap: 12px; }
+.col { flex: 1; }
+.muted { color: var(--txt-2); }
+.dim { color: var(--txt-3); }
+.right { text-align: right; }
+.center { text-align: center; }
+
+.bar {
+  height: 8px; background: var(--bg-3); border-radius: 4px; overflow: hidden; position: relative;
+}
+.bar > i {
+  display: block; height: 100%;
+  background: linear-gradient(90deg, var(--accent-3), var(--accent));
+}
+.bar.danger > i { background: linear-gradient(90deg, #b91c1c, var(--danger)); }
+.bar.warn > i { background: linear-gradient(90deg, #b45309, var(--warn)); }
+
+.spark {
+  display: inline-block; width: 80px; height: 22px; vertical-align: middle;
+}
+.list-features {
+  margin: 12px 0 0 0; padding: 0; list-style: none;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px;
+  font-size: 12px; color: var(--txt-2);
+}
+.list-features li::before {
+  content: "▸"; color: var(--accent); margin-right: 8px;
+}
+
+.heatmap {
+  display: grid; grid-template-columns: 60px repeat(24, 1fr); gap: 2px;
+  margin-top: 4px; font-size: 9px; color: var(--txt-3);
+}
+.heatmap .cell { aspect-ratio: 1.6; border-radius: 2px; background: var(--bg-3); }
+.heatmap .cell[data-v="0"] { background: var(--bg-3); }
+.heatmap .cell[data-v="1"] { background: rgba(163,230,53,0.08); }
+.heatmap .cell[data-v="2"] { background: rgba(163,230,53,0.18); }
+.heatmap .cell[data-v="3"] { background: rgba(163,230,53,0.32); }
+.heatmap .cell[data-v="4"] { background: rgba(163,230,53,0.55); }
+.heatmap .cell[data-v="5"] { background: rgba(163,230,53,0.85); }
+.heatmap .lbl { font-size: 10px; color: var(--txt-2); padding: 2px 6px; }
+
+.funnel-step {
+  display: grid; grid-template-columns: 130px 1fr 80px; gap: 10px; align-items: center;
+  padding: 6px 0; border-bottom: 1px dashed var(--border);
+}
+.funnel-step .name { font-size: 12px; color: var(--txt-1); }
+.funnel-step .pct { color: var(--accent); font-weight: 600; font-size: 12px; }
+
+.kanban {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;
+}
+.kanban .col-head {
+  padding: 6px 10px; background: var(--bg-elev); border-radius: 6px 6px 0 0;
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--accent-light);
+  border-bottom: 2px solid var(--accent);
+}
+.kanban .card-mini {
+  background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+  padding: 8px 10px; margin-top: 6px; font-size: 12px;
+}
+
+.tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+.tab { padding: 8px 14px; font-size: 12px; color: var(--txt-2); cursor: pointer; border-bottom: 2px solid transparent; }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+.kbd {
+  font-family: monospace; font-size: 11px; padding: 2px 6px;
+  background: var(--bg-3); border: 1px solid var(--border-2); border-radius: 4px;
+  color: var(--accent-light);
+}
+
+.alert-box {
+  border-left: 3px solid var(--accent); background: rgba(163,230,53,0.06);
+  padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 12px; margin: 8px 0;
+}
+.alert-box.danger { border-left-color: var(--danger); background: rgba(239,68,68,0.06); }
+.alert-box.warn { border-left-color: var(--warn); background: rgba(245,158,11,0.06); }
+.alert-box.info { border-left-color: var(--info); background: rgba(34,211,238,0.06); }
+
+.line-chart {
+  height: 100px; background: var(--bg-2); border: 1px solid var(--border);
+  border-radius: 6px; position: relative; margin: 8px 0;
+}
+
+.empty-hint {
+  text-align: center; padding: 40px 20px; color: var(--txt-3); font-size: 12px;
+  border: 1px dashed var(--border); border-radius: 8px;
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+
+<aside class="sidebar">
+  <h1><span class="logo">TTK</span> TTK Manager</h1>
+  <div class="sub">God-tier vision · 30 mockup screens</div>
+
+  <div class="group">Phase 1 · Foundation</div>
+  <a href="#dashboard" class="nav-item">📊 Dashboard <span class="badge p1">P1</span></a>
+  <a href="#accounts" class="nav-item">🔑 Accounts <span class="badge p1">P1</span></a>
+  <a href="#campaigns" class="nav-item">📦 Campaigns <span class="badge p1">P1</span></a>
+  <a href="#schedules" class="nav-item">⏰ Schedules <span class="badge p1">P1</span></a>
+  <a href="#logs" class="nav-item">📋 Activity Log <span class="badge p1">P1</span></a>
+
+  <div class="group">Phase 2 · Pro</div>
+  <a href="#reports" class="nav-item">📈 Performance Reports <span class="badge p2">P2</span></a>
+  <a href="#heatmap" class="nav-item">🔥 Dayparting Heatmap <span class="badge p2">P2</span></a>
+  <a href="#auto-rules" class="nav-item">🤖 Auto-Rules Engine <span class="badge p2">P2</span></a>
+  <a href="#bulk-ops" class="nav-item">📋 Bulk Operations <span class="badge p2">P2</span></a>
+  <a href="#csv" class="nav-item">📤 CSV Import / Export <span class="badge p2">P2</span></a>
+  <a href="#anomaly" class="nav-item">⚠️ Anomaly Detector <span class="badge p2">P2</span></a>
+  <a href="#pacing" class="nav-item">💰 Budget Pacing <span class="badge p2">P2</span></a>
+  <a href="#creatives" class="nav-item">🎨 Creative Library <span class="badge p2">P2</span></a>
+  <a href="#ab-test" class="nav-item">🅰️ A/B Test Manager <span class="badge p2">P2</span></a>
+  <a href="#audiences" class="nav-item">👥 Audience Manager <span class="badge p2">P2</span></a>
+
+  <div class="group">Phase 3 · Advanced</div>
+  <a href="#pixel" class="nav-item">🎯 Pixel & Event Inspector <span class="badge p3">P3</span></a>
+  <a href="#funnel" class="nav-item">🪃 Conversion Funnel <span class="badge p3">P3</span></a>
+  <a href="#fatigue" class="nav-item">😴 Creative Fatigue <span class="badge p3">P3</span></a>
+  <a href="#competitor" class="nav-item">🕵️ Competitor Spy <span class="badge p3">P3</span></a>
+  <a href="#hashtags" class="nav-item">#️⃣ Hashtag Tracker <span class="badge p3">P3</span></a>
+  <a href="#bid-tester" class="nav-item">💸 Bid Strategy Tester <span class="badge p3">P3</span></a>
+  <a href="#currency" class="nav-item">💱 Multi-Currency <span class="badge p3">P3</span></a>
+  <a href="#naming" class="nav-item">🏷️ Naming Enforcer <span class="badge p3">P3</span></a>
+  <a href="#alerts" class="nav-item">🔔 Webhooks / Slack <span class="badge p3">P3</span></a>
+  <a href="#scheduled-reports" class="nav-item">📧 Scheduled Reports <span class="badge p3">P3</span></a>
+  <a href="#quota" class="nav-item">📡 API Quota Monitor <span class="badge p3">P3</span></a>
+
+  <div class="group">Phase 4 · Operations</div>
+  <a href="#settings" class="nav-item">⚙️ Settings & Preferences <span class="badge p4">P4</span></a>
+  <a href="#backup" class="nav-item">💾 Backup / Restore <span class="badge p4">P4</span></a>
+  <a href="#health" class="nav-item">🩺 Health Check <span class="badge p4">P4</span></a>
+  <a href="#shortcuts" class="nav-item">⌨️ Keyboard Shortcuts <span class="badge p4">P4</span></a>
+</aside>
+
+<main class="main">
+
+<div class="intro">
+  <h2>TTK Manager — God-Tier Vision Mockups</h2>
+  <p>30 screens covering everything a TikTok ads operator or agency needs in one portable Windows desktop tool. Phase 1 ships with the core; Phase 2–4 light up after the Marketing API is approved and product–market fit is validated.</p>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--accent)"></span> P1 — already in v0.1 build</span>
+    <span><span class="dot" style="background:var(--info)"></span> P2 — Pro tier (post-API)</span>
+    <span><span class="dot" style="background:var(--warn)"></span> P3 — Advanced tier</span>
+    <span><span class="dot" style="background:var(--txt-2)"></span> P4 — Operations</span>
+  </div>
+</div>
+
+<!-- ============== 1 · Dashboard ============== -->
+<section id="dashboard" class="screen">
+  <h3><span class="num">01</span> 📊 Dashboard</h3>
+  <p class="hint">Single-glance overview: spend, performance, active rules, alerts. The first thing you see when you open the app.</p>
+  <div class="fake-app">
+    <div class="titlebar">
+      <div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Dashboard
+      <div class="pill"><span class="dot"></span> Live · 4 accounts · 2 alerts</div>
+    </div>
+    <div class="body">
+      <div class="grid-stats">
+        <div class="card-stat"><div class="label">Today's spend</div><div class="value">฿18,420</div><div class="delta">▲ 12% vs yest.</div></div>
+        <div class="card-stat"><div class="label">CPM</div><div class="value">฿84</div><div class="delta neg">▲ 6% (worse)</div></div>
+        <div class="card-stat"><div class="label">CPC</div><div class="value">฿2.31</div><div class="delta">▼ 8%</div></div>
+        <div class="card-stat"><div class="label">ROAS (7d)</div><div class="value">3.2×</div><div class="delta">▲ 0.4×</div></div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div style="font-size:12px; color:var(--accent-light); margin-bottom:6px;">Spend by hour (today)</div>
+          <div class="line-chart"></div>
+        </div>
+        <div class="col">
+          <div style="font-size:12px; color:var(--accent-light); margin-bottom:6px;">Active rules — next 4 firings</div>
+          <table class="tbl">
+            <tr><td>18:00</td><td>Peak boost (Camp #003)</td><td><span class="tag lime">SetBudget</span></td></tr>
+            <tr><td>22:00</td><td>Off-hours pause</td><td><span class="tag amber">Pause</span></td></tr>
+            <tr><td>09:00</td><td>Morning enable</td><td><span class="tag green">Enable</span></td></tr>
+            <tr><td>+1d</td><td>Weekend cap reset</td><td><span class="tag lime">SetBudget</span></td></tr>
+          </table>
+        </div>
+      </div>
+      <div class="alert-box warn"><b>Warning</b> · Campaign "Songkran Push" CPM up 38% in last 60min — auto-rule paused it.</div>
+      <div class="alert-box info"><b>Info</b> · Token for "Demo TH" advertiser expires in 6 days — auto-refresh queued.</div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>4 KPI tiles with delta vs yesterday / last 7d</li>
+    <li>Spend-by-hour sparkline for today</li>
+    <li>Next 4 scheduled firings</li>
+    <li>Latest 3 anomaly alerts</li>
+    <li>Quick links to Connect / Add rule / View report</li>
+    <li>Account health pill in titlebar</li>
+  </ul>
+</section>
+
+<!-- ============== 2 · Accounts ============== -->
+<section id="accounts" class="screen">
+  <h3><span class="num">02</span> 🔑 Accounts</h3>
+  <p class="hint">Manage one or many TikTok ad advertiser accounts. OAuth out-of-band, DPAPI-encrypted tokens.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Accounts</div>
+    <div class="body">
+      <div class="toolbar">
+        <button class="btn accent">＋ Connect Account</button>
+        <button class="btn">↻ Refresh</button>
+        <button class="btn danger">🗑 Remove</button>
+        <input class="input" placeholder="Search advertiser…">
+        <span class="muted" style="margin-left:auto;">3 of 3 healthy</span>
+      </div>
+      <table class="tbl">
+        <tr><th></th><th>Advertiser</th><th>ID</th><th>Currency</th><th>Spend (30d)</th><th>Token expires</th><th>Status</th></tr>
+        <tr><td><input type="checkbox" checked></td><td>Songkran Brand TH</td><td class="mono">7012345678901234567</td><td>THB</td><td>฿412,000</td><td>in 12 days</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td><input type="checkbox"></td><td>Beauty Co. (Agency)</td><td class="mono">7012345678901299991</td><td>USD</td><td>$8,420</td><td>in 6 days</td><td><span class="tag amber">renew soon</span></td></tr>
+        <tr><td><input type="checkbox"></td><td>Sandbox Test</td><td class="mono">7099999999999999991</td><td>THB</td><td>฿0</td><td>—</td><td><span class="tag dim">paused</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>OAuth 2.0 out-of-band code-paste flow</li>
+    <li>DPAPI + AES-GCM token encryption</li>
+    <li>Auto refresh + warning at T-7 days</li>
+    <li>Health check (last successful API call)</li>
+    <li>Multi-select for bulk pause / re-auth</li>
+    <li>Per-account spend rollup (30d)</li>
+  </ul>
+</section>
+
+<!-- ============== 3 · Campaigns ============== -->
+<section id="campaigns" class="screen">
+  <h3><span class="num">03</span> 📦 Campaigns Browser</h3>
+  <p class="hint">Browse, filter, and inspect all campaigns / ad groups across connected accounts.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Campaigns</div>
+    <div class="body">
+      <div class="toolbar">
+        <select class="input"><option>All advertisers</option><option>Songkran Brand TH</option></select>
+        <select class="input"><option>All objectives</option><option>CONVERSIONS</option><option>TRAFFIC</option></select>
+        <select class="input"><option>All statuses</option><option>Enabled</option><option>Paused</option></select>
+        <input class="input" placeholder="Filter by name…">
+        <button class="btn ghost">⚙ Columns</button>
+      </div>
+      <table class="tbl">
+        <tr><th>Campaign</th><th>Objective</th><th>Status</th><th>Daily budget</th><th>Spend (today)</th><th>CPM</th><th>CTR</th><th>ROAS</th><th>Trend</th></tr>
+        <tr><td><b>Songkran Push</b><div class="dim mono" style="font-size:10px">camp_001</div></td><td>CONVERSIONS</td><td><span class="tag green">ON</span></td><td>฿5,000</td><td>฿4,820</td><td>฿82</td><td>1.8%</td><td>3.4×</td><td>📈</td></tr>
+        <tr><td><b>Songkran TopView</b><div class="dim mono" style="font-size:10px">camp_002</div></td><td>REACH</td><td><span class="tag amber">SCHEDULED</span></td><td>฿20,000</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+        <tr><td><b>Always-on Retargeting</b><div class="dim mono" style="font-size:10px">camp_003</div></td><td>CONVERSIONS</td><td><span class="tag green">ON</span></td><td>฿2,500</td><td>฿2,310</td><td>฿62</td><td>2.4%</td><td>4.1×</td><td>📈</td></tr>
+        <tr><td><b>Test — Lima Hook v3</b><div class="dim mono" style="font-size:10px">camp_004</div></td><td>TRAFFIC</td><td><span class="tag red">PAUSED (auto-rule)</span></td><td>฿1,000</td><td>฿940</td><td>฿104</td><td>0.6%</td><td>0.8×</td><td>📉</td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Multi-account view with advertiser filter</li>
+    <li>Filter by objective, status, optimization goal</li>
+    <li>Customizable columns (drag to reorder)</li>
+    <li>Inline trend sparkline per campaign</li>
+    <li>Right-click for quick actions menu</li>
+    <li>Drill into ad groups → ads with one click</li>
+  </ul>
+</section>
+
+<!-- ============== 4 · Schedules ============== -->
+<section id="schedules" class="screen">
+  <h3><span class="num">04</span> ⏰ Schedule Rules</h3>
+  <p class="hint">Time-based budget changes and pause/resume automation. The core feature.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Schedules</div>
+    <div class="body">
+      <div style="background:var(--bg-2); border:1px solid var(--border); border-radius:6px; padding:14px; margin-bottom:12px;">
+        <div style="display:grid; grid-template-columns:120px 1fr 120px 1fr; gap:10px; font-size:12px;">
+          <div class="muted" style="align-self:center;">Rule name</div><input class="input" value="Peak hours boost" style="width:100%;">
+          <div class="muted" style="align-self:center;">Account</div><select class="input" style="width:100%"><option>Songkran Brand TH</option></select>
+          <div class="muted" style="align-self:center;">Campaign</div><select class="input" style="width:100%"><option>Songkran Push</option></select>
+          <div class="muted" style="align-self:center;">Action</div><select class="input" style="width:100%"><option>Set daily budget</option></select>
+          <div class="muted" style="align-self:center;">Daily budget</div><input class="input" value="฿5,000" style="width:100%">
+          <div class="muted" style="align-self:center;">When</div><select class="input" style="width:100%"><option>Weekdays at 18:00</option></select>
+          <div class="muted" style="align-self:center;">Cron</div><input class="input mono" value="0 0 18 ? * MON-FRI" style="width:100%">
+        </div>
+        <div style="margin-top:10px;"><button class="btn accent">＋ Add Rule</button> <button class="btn">↻ Refresh</button></div>
+      </div>
+      <table class="tbl">
+        <tr><th>ID</th><th>Name</th><th>Campaign</th><th>Action</th><th>Cron</th><th>Next fire</th><th>On</th></tr>
+        <tr><td>#1</td><td>Peak hours boost</td><td>Songkran Push</td><td><span class="tag lime">SetBudget ฿5,000</span></td><td class="mono">0 0 18 ? * MON-FRI</td><td>Today 18:00</td><td><span class="tag green">●</span></td></tr>
+        <tr><td>#2</td><td>Off-hours pause</td><td>Songkran Push</td><td><span class="tag amber">Pause</span></td><td class="mono">0 0 22 * * ?</td><td>Today 22:00</td><td><span class="tag green">●</span></td></tr>
+        <tr><td>#3</td><td>Morning enable</td><td>Songkran Push</td><td><span class="tag green">Enable</span></td><td class="mono">0 0 9 * * ?</td><td>Tomorrow 09:00</td><td><span class="tag green">●</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Per-rule cron expression with 9 named presets</li>
+    <li>Time-zone aware (default Asia/Bangkok)</li>
+    <li>Next-fire countdown column</li>
+    <li>Toggle / delete / clone rule</li>
+    <li>Misfire policy: skip / fire-now / pause-rule</li>
+    <li>Conflict detection with overlapping rules</li>
+  </ul>
+</section>
+
+<!-- ============== 5 · Activity Log ============== -->
+<section id="logs" class="screen">
+  <h3><span class="num">05</span> 📋 Activity Log</h3>
+  <p class="hint">Every API call, every scheduled action, every error — locally stored, always queryable.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Logs</div>
+    <div class="body">
+      <div class="toolbar">
+        <input class="input" placeholder="Search…" style="min-width:260px;">
+        <select class="input"><option>All status</option><option>Success</option><option>Failed</option></select>
+        <select class="input"><option>Last 24h</option><option>Last 7d</option><option>Custom…</option></select>
+        <button class="btn">⤓ Export CSV</button>
+      </div>
+      <table class="tbl">
+        <tr><th>Time</th><th>Rule</th><th>Account</th><th>Campaign</th><th>Action</th><th>Status</th><th>Detail / Error</th></tr>
+        <tr><td>11:18:23</td><td>#2</td><td>Songkran TH</td><td>camp_001</td><td>Pause</td><td><span class="tag green">OK</span></td><td>—</td></tr>
+        <tr><td>10:00:01</td><td>#1</td><td>Songkran TH</td><td>camp_001</td><td>SetBudget</td><td><span class="tag green">OK</span></td><td>budget=5000.00 (was 2500)</td></tr>
+        <tr><td>09:45:11</td><td>—</td><td>Beauty Co.</td><td>camp_204</td><td>RefreshToken</td><td><span class="tag amber">Retry</span></td><td>HTTP 429 — backed off 1.4s</td></tr>
+        <tr><td>09:00:00</td><td>#3</td><td>Songkran TH</td><td>camp_001</td><td>Enable</td><td><span class="tag green">OK</span></td><td>—</td></tr>
+        <tr><td>Yest 23:50</td><td>auto-rule</td><td>Sandbox</td><td>camp_888</td><td>Pause</td><td><span class="tag red">Failed</span></td><td>API err 40002 invalid status</td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Full-text search across all log fields</li>
+    <li>Time range filter + custom date picker</li>
+    <li>Export filtered set as CSV</li>
+    <li>Retry counts and backoff durations recorded</li>
+    <li>Click row to see full request/response payload</li>
+    <li>30-day default retention, configurable</li>
+  </ul>
+</section>
+
+<!-- ============== 6 · Performance Reports ============== -->
+<section id="reports" class="screen">
+  <h3><span class="num">06</span> 📈 Performance Reports</h3>
+  <p class="hint">Spend, impressions, clicks, conversions, ROAS — broken down by any dimension.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Reports</div>
+    <div class="body">
+      <div class="toolbar">
+        <select class="input"><option>Last 30 days</option><option>Last 7 days</option><option>This month</option></select>
+        <select class="input"><option>By campaign</option><option>By ad group</option><option>By placement</option><option>By age/gender</option></select>
+        <select class="input"><option>All accounts</option></select>
+        <button class="btn ghost">⊞ Add metric</button>
+        <button class="btn ghost">⤓ Export</button>
+      </div>
+      <div class="grid-stats" style="grid-template-columns:repeat(5,1fr);">
+        <div class="card-stat"><div class="label">Spend</div><div class="value">฿412k</div><div class="delta">▲ 18%</div></div>
+        <div class="card-stat"><div class="label">Imp.</div><div class="value">4.9M</div><div class="delta">▲ 22%</div></div>
+        <div class="card-stat"><div class="label">CTR</div><div class="value">1.94%</div><div class="delta">▲ 0.2pp</div></div>
+        <div class="card-stat"><div class="label">Conv.</div><div class="value">3,418</div><div class="delta">▲ 31%</div></div>
+        <div class="card-stat"><div class="label">ROAS</div><div class="value">3.4×</div><div class="delta neg">▼ 0.1×</div></div>
+      </div>
+      <div class="line-chart"></div>
+      <table class="tbl">
+        <tr><th>Campaign</th><th>Spend</th><th>Imp.</th><th>Clicks</th><th>CTR</th><th>CPC</th><th>Conv.</th><th>CPA</th><th>Revenue</th><th>ROAS</th></tr>
+        <tr><td>Songkran Push</td><td>฿180k</td><td>2.1M</td><td>40k</td><td>1.9%</td><td>฿4.5</td><td>1,520</td><td>฿118</td><td>฿612k</td><td><span class="tag green">3.4×</span></td></tr>
+        <tr><td>Always-on Retgt</td><td>฿95k</td><td>0.7M</td><td>22k</td><td>3.1%</td><td>฿4.3</td><td>1,140</td><td>฿83</td><td>฿390k</td><td><span class="tag green">4.1×</span></td></tr>
+        <tr><td>Test Lima Hook v3</td><td>฿28k</td><td>0.4M</td><td>2.2k</td><td>0.6%</td><td>฿12.6</td><td>40</td><td>฿700</td><td>฿22k</td><td><span class="tag red">0.8×</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Pivot by campaign / ad group / ad / placement / age / gender / platform / country</li>
+    <li>Pluggable metric set (toggle columns)</li>
+    <li>Stacked / line / bar chart switcher</li>
+    <li>Comparison mode: this period vs last</li>
+    <li>Export to CSV / Excel / PDF</li>
+    <li>Save report templates for reuse</li>
+  </ul>
+</section>
+
+<!-- ============== 7 · Dayparting Heatmap ============== -->
+<section id="heatmap" class="screen">
+  <h3><span class="num">07</span> 🔥 Dayparting Heatmap</h3>
+  <p class="hint">Visualize performance by hour × day. Find the hot windows. Click a cell → create a budget rule for that slot.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Dayparting</div>
+    <div class="body">
+      <div class="toolbar">
+        <select class="input"><option>Songkran Push</option></select>
+        <select class="input"><option>ROAS</option><option>CPM</option><option>CTR</option><option>Conversions</option></select>
+        <select class="input"><option>Last 30 days</option></select>
+      </div>
+      <div class="heatmap" id="hm"></div>
+      <div style="font-size:11px; color:var(--txt-2); margin-top:6px; display:flex; gap:8px; align-items:center;">
+        <span>Low</span>
+        <span style="display:inline-block;width:12px;height:10px;background:rgba(163,230,53,0.08)"></span>
+        <span style="display:inline-block;width:12px;height:10px;background:rgba(163,230,53,0.32)"></span>
+        <span style="display:inline-block;width:12px;height:10px;background:rgba(163,230,53,0.85)"></span>
+        <span>High ROAS · Click any cell to create a rule for that hour/day</span>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>24×7 hour×day grid colored by chosen metric</li>
+    <li>Click cell → "Create rule for this slot" modal</li>
+    <li>Compare two periods side-by-side</li>
+    <li>Per-campaign or aggregate view</li>
+    <li>Export to PNG for stakeholder decks</li>
+    <li>Local time-zone aware</li>
+  </ul>
+</section>
+
+<!-- ============== 8 · Auto-Rules Engine ============== -->
+<section id="auto-rules" class="screen">
+  <h3><span class="num">08</span> 🤖 Auto-Rules Engine</h3>
+  <p class="hint">"If this then that" rules that fire on metric thresholds — pause losers, scale winners automatically.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Auto-Rules</div>
+    <div class="body">
+      <div class="toolbar">
+        <button class="btn accent">＋ New Rule</button>
+        <button class="btn ghost">📚 Templates</button>
+        <span class="muted" style="margin-left:auto;">12 active · 3 fired today</span>
+      </div>
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--bg-2); margin-bottom:10px;">
+        <div style="font-weight:600; color:var(--accent);">📛 Pause if CPC explodes</div>
+        <div style="font-size:12px; color:var(--txt-2); margin-top:6px;">
+          <b>WHEN</b> CPC <span class="tag red">&gt; ฿8</span> <b>FOR</b> 60 min <b>ON</b> any campaign in <i>Songkran Brand TH</i>
+          → <b>THEN</b> <span class="tag amber">Pause campaign</span> + <span class="tag cyan">Send Slack alert</span>
+        </div>
+        <div style="font-size:11px; color:var(--txt-3); margin-top:4px;">Last fired: yesterday 23:50 (Test Lima Hook v3) · Cooldown: 3h</div>
+      </div>
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--bg-2); margin-bottom:10px;">
+        <div style="font-weight:600; color:var(--accent);">🚀 Scale winners</div>
+        <div style="font-size:12px; color:var(--txt-2); margin-top:6px;">
+          <b>WHEN</b> ROAS <span class="tag green">≥ 4×</span> <b>AND</b> spend ≥ ฿2k <b>FOR</b> 24h
+          → <b>THEN</b> <span class="tag lime">Increase budget +20%</span> (max +50% / week)
+        </div>
+        <div style="font-size:11px; color:var(--txt-3); margin-top:4px;">Last fired: 09:00 (Always-on Retgt: ฿2,500 → ฿3,000)</div>
+      </div>
+      <div style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--bg-2);">
+        <div style="font-weight:600; color:var(--accent);">💤 Sleep dormant ad groups</div>
+        <div style="font-size:12px; color:var(--txt-2); margin-top:6px;">
+          <b>WHEN</b> spend &lt; ฿200 in 48h <b>AND</b> impressions &lt; 5k → <b>THEN</b> Pause ad group
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>WHEN/AND/OR/FOR window/ON scope → THEN action / alert</li>
+    <li>14+ metric triggers (CPC, CPM, CTR, ROAS, spend, conversions, frequency…)</li>
+    <li>Cooldown to prevent flapping</li>
+    <li>Dry-run mode to preview firings before going live</li>
+    <li>Action library: pause / enable / set budget / change bid / send alert</li>
+    <li>Templates: "Newbie protection", "Scale winner", "Frequency cap", etc.</li>
+  </ul>
+</section>
+
+<!-- ============== 9 · Bulk Operations ============== -->
+<section id="bulk-ops" class="screen">
+  <h3><span class="num">09</span> 📋 Bulk Operations</h3>
+  <p class="hint">Excel-like multi-select on campaigns — change budgets, statuses, names in one shot.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Bulk</div>
+    <div class="body">
+      <div class="toolbar">
+        <span class="muted">3 selected</span>
+        <button class="btn">⏸ Pause</button>
+        <button class="btn">▶ Enable</button>
+        <button class="btn">＋ Adjust budget…</button>
+        <button class="btn">📋 Duplicate</button>
+        <button class="btn">🏷 Rename pattern…</button>
+        <button class="btn danger">🗑 Delete</button>
+      </div>
+      <table class="tbl">
+        <tr><th></th><th>Campaign</th><th>Daily ฿</th><th>Status</th><th>Spend (today)</th></tr>
+        <tr><td><input type="checkbox" checked></td><td>Songkran Push</td><td>฿5,000</td><td><span class="tag green">ON</span></td><td>฿4,820</td></tr>
+        <tr><td><input type="checkbox" checked></td><td>Songkran TopView</td><td>฿20,000</td><td><span class="tag amber">SCH</span></td><td>—</td></tr>
+        <tr><td><input type="checkbox" checked></td><td>Always-on Retgt</td><td>฿2,500</td><td><span class="tag green">ON</span></td><td>฿2,310</td></tr>
+        <tr><td><input type="checkbox"></td><td>Test Lima Hook v3</td><td>฿1,000</td><td><span class="tag red">PAUSED</span></td><td>฿940</td></tr>
+      </table>
+      <div class="alert-box">Adjust budget · Set absolute / Increase by % / Decrease by % · Preview affected: <b>3 campaigns</b>, spend impact <b>+฿4,500/day</b></div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Multi-select with shift-click range</li>
+    <li>Bulk pause / enable / delete / duplicate</li>
+    <li>Bulk budget adjust (absolute / %, per-account or flat)</li>
+    <li>Pattern rename (e.g. add "[Q2]" prefix)</li>
+    <li>Preview affected count + spend delta before commit</li>
+    <li>Undo support for last bulk op</li>
+  </ul>
+</section>
+
+<!-- ============== 10 · CSV Import / Export ============== -->
+<section id="csv" class="screen">
+  <h3><span class="num">10</span> 📤 CSV / Excel Import &amp; Export</h3>
+  <p class="hint">Round-trip campaigns, ad groups, schedule rules through CSV. Edit in Excel, push back.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Import / Export</div>
+    <div class="body">
+      <div class="row">
+        <div class="col" style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--bg-2);">
+          <div style="color:var(--accent); font-weight:600; margin-bottom:6px;">⤓ Export</div>
+          <div style="font-size:12px; color:var(--txt-2);">
+            <label><input type="checkbox" checked> Campaigns</label><br>
+            <label><input type="checkbox" checked> Ad groups</label><br>
+            <label><input type="checkbox"> Ads</label><br>
+            <label><input type="checkbox" checked> Schedule rules</label><br>
+            <label><input type="checkbox"> Audit log (last 30d)</label>
+          </div>
+          <div style="margin-top:10px;"><button class="btn accent">Export → CSV</button> <button class="btn">Excel (.xlsx)</button></div>
+        </div>
+        <div class="col" style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--bg-2);">
+          <div style="color:var(--accent); font-weight:600; margin-bottom:6px;">⤒ Import</div>
+          <div style="border:1px dashed var(--border-2); border-radius:6px; padding:18px; text-align:center; color:var(--txt-2); font-size:12px;">
+            Drop CSV / XLSX file here<br><span class="dim">or click to browse</span>
+          </div>
+          <div class="alert-box" style="margin-top:8px;">Will preview diffs before applying — <b>0 records will be modified</b> until you confirm.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Export selected entities to CSV / XLSX</li>
+    <li>Drag-and-drop import with header auto-detect</li>
+    <li>Three-way diff view (current / file / proposed)</li>
+    <li>Validation pre-flight (cron format, budget &gt; 0, etc.)</li>
+    <li>Dry-run + commit two-step</li>
+    <li>Round-trip safe: re-export the same file = no diff</li>
+  </ul>
+</section>
+
+<!-- ============== 11 · Anomaly Detector ============== -->
+<section id="anomaly" class="screen">
+  <h3><span class="num">11</span> ⚠️ Anomaly Detector</h3>
+  <p class="hint">Statistical alerts when CPM / CPC / CTR / spend deviate beyond expected bounds.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Anomalies</div>
+    <div class="body">
+      <div class="alert-box danger"><b>🚨 Critical · 11:32</b> · Spend velocity on <b>Songkran Push</b> is 3.2σ above 14-day baseline (฿1,200/h vs ฿380/h expected). Pacing toward ฿28k vs ฿5k cap by midnight.</div>
+      <div class="alert-box warn"><b>⚠ Warning · 10:18</b> · CPM on <b>Beauty Q2 Drop</b> jumped 38% in last 60 min. Likely auction crowding or creative fatigue.</div>
+      <div class="alert-box info"><b>ℹ Info · 09:00</b> · Conversions for <b>Always-on Retgt</b> dropped to 0 in the last hour. Pixel may be misfiring — check Inspector.</div>
+      <div style="margin-top:12px; border-top:1px solid var(--border); padding-top:10px;">
+        <div class="muted" style="font-size:12px; margin-bottom:6px;">Detection settings</div>
+        <table class="tbl">
+          <tr><th>Metric</th><th>Method</th><th>Sensitivity</th><th>Min sample</th><th>Cooldown</th></tr>
+          <tr><td>CPM</td><td>Z-score on rolling 14d</td><td>2σ</td><td>1k impressions</td><td>30 min</td></tr>
+          <tr><td>CPC</td><td>Z-score on rolling 14d</td><td>2σ</td><td>50 clicks</td><td>30 min</td></tr>
+          <tr><td>Spend velocity</td><td>Pace vs daily cap</td><td>120%</td><td>—</td><td>15 min</td></tr>
+          <tr><td>Zero-conversion stretch</td><td>N hours w/ 0 conv</td><td>2 hours</td><td>—</td><td>60 min</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Z-score and pacing-based detection</li>
+    <li>Per-metric sensitivity (1σ — 4σ)</li>
+    <li>Cooldown to prevent alert fatigue</li>
+    <li>Channel: in-app / Slack / email / webhook</li>
+    <li>One-click action: pause / lower budget / silence</li>
+    <li>Anomaly history with annotation ("known cause")</li>
+  </ul>
+</section>
+
+<!-- ============== 12 · Budget Pacing ============== -->
+<section id="pacing" class="screen">
+  <h3><span class="num">12</span> 💰 Budget Pacing &amp; Spend Caps</h3>
+  <p class="hint">Stay within monthly budgets, pace evenly across the period, never overshoot.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Pacing</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Account / Group</th><th>Period cap</th><th>Spent</th><th>Pace</th><th>Projected end</th><th>Status</th></tr>
+        <tr><td>Songkran TH (April)</td><td>฿500,000</td><td>฿412,000</td><td><div class="bar"><i style="width:82%"></i></div></td><td>฿498,400</td><td><span class="tag green">on-pace</span></td></tr>
+        <tr><td>Beauty Co. (Q2)</td><td>$30,000</td><td>$8,420</td><td><div class="bar warn"><i style="width:28%"></i></div></td><td>$24,800</td><td><span class="tag amber">under-pace</span></td></tr>
+        <tr><td>Sandbox (test)</td><td>฿10,000</td><td>฿11,820</td><td><div class="bar danger"><i style="width:100%"></i></div></td><td>฿14,200</td><td><span class="tag red">over-cap</span></td></tr>
+      </table>
+      <div class="alert-box danger" style="margin-top:10px;"><b>Sandbox</b> cap exceeded — auto-pause triggered at 11:18:23.</div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Per-account / per-group / per-campaign caps</li>
+    <li>Daily / weekly / monthly periods (custom calendar)</li>
+    <li>Auto-pause when cap reached</li>
+    <li>Pacing recommendations ("you should spend ฿x today")</li>
+    <li>Carry-over rule: bank under-spend or reset</li>
+    <li>End-of-period projection with confidence interval</li>
+  </ul>
+</section>
+
+<!-- ============== 13 · Creative Library ============== -->
+<section id="creatives" class="screen">
+  <h3><span class="num">13</span> 🎨 Creative Library</h3>
+  <p class="hint">Centralize, tag, and reuse video / image creatives across campaigns.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Creatives</div>
+    <div class="body">
+      <div class="toolbar">
+        <button class="btn accent">⤒ Upload</button>
+        <input class="input" placeholder="Search by tag, name, hash…">
+        <select class="input"><option>All formats</option><option>Video</option><option>Image</option></select>
+        <select class="input"><option>All tags</option><option>Songkran</option><option>Q2</option><option>UGC</option></select>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#1a1a2e,#16213e); position:relative; display:grid; place-items:center; color:var(--accent); font-size:32px;">▶</div>
+          <div style="padding:8px 10px;">
+            <div style="font-size:12px; font-weight:600;">Songkran_v3.mp4</div>
+            <div style="font-size:10px; color:var(--txt-2);">15s · 2.4 MB · used in 4 ads</div>
+            <div style="margin-top:4px;"><span class="tag lime">Songkran</span> <span class="tag dim">UGC</span></div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#312e81,#0f766e); display:grid; place-items:center; color:var(--accent); font-size:32px;">▶</div>
+          <div style="padding:8px 10px;">
+            <div style="font-size:12px; font-weight:600;">Lima_hook_A.mp4</div>
+            <div style="font-size:10px; color:var(--txt-2);">8s · 1.1 MB · used in 2 ads</div>
+            <div style="margin-top:4px;"><span class="tag lime">Hook</span> <span class="tag dim">Test</span></div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#7c2d12,#dc2626); display:grid; place-items:center; color:var(--accent); font-size:32px;">▶</div>
+          <div style="padding:8px 10px;">
+            <div style="font-size:12px; font-weight:600;">Lima_hook_B.mp4</div>
+            <div style="font-size:10px; color:var(--txt-2);">8s · 1.0 MB · used in 1 ad</div>
+            <div style="margin-top:4px;"><span class="tag lime">Hook</span> <span class="tag amber">Fatigued</span></div>
+          </div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#0c4a6e,#0891b2); display:grid; place-items:center; color:var(--accent); font-size:24px;">📷</div>
+          <div style="padding:8px 10px;">
+            <div style="font-size:12px; font-weight:600;">Banner_Q2.png</div>
+            <div style="font-size:10px; color:var(--txt-2);">1080×1920 · 240 KB</div>
+          </div>
+        </div>
+        <div style="border:1px dashed var(--border-2); border-radius:8px; padding:20px; text-align:center; color:var(--txt-3); font-size:12px; aspect-ratio:9/16; display:grid; place-items:center;">＋ Drop file</div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Local-first with optional cloud sync</li>
+    <li>Tag, search, and filter by hash to find duplicates</li>
+    <li>Per-creative performance summary</li>
+    <li>Detect fatigue (CTR drop over time)</li>
+    <li>One-click "use in new ad"</li>
+    <li>Auto-resize / format per TikTok placement specs</li>
+  </ul>
+</section>
+
+<!-- ============== 14 · A/B Test Manager ============== -->
+<section id="ab-test" class="screen">
+  <h3><span class="num">14</span> 🅰️ A/B Test Manager</h3>
+  <p class="hint">Run and pick winners across creative / hook / audience / CTA variants.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · A/B Tests</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Test</th><th>Variants</th><th>Spend</th><th>Winner</th><th>Confidence</th><th>Status</th></tr>
+        <tr><td>Hook A vs B vs C</td><td>3</td><td>฿32k</td><td><b>B</b> (CTR 2.4%)</td><td>96%</td><td><span class="tag green">Concluded</span></td></tr>
+        <tr><td>CTA "Shop now" vs "Get 50% off"</td><td>2</td><td>฿18k</td><td>—</td><td>72%</td><td><span class="tag amber">Running</span></td></tr>
+        <tr><td>Audience: lookalike 1% vs 5%</td><td>2</td><td>฿24k</td><td><b>1%</b> (ROAS 4.1×)</td><td>91%</td><td><span class="tag amber">Running</span></td></tr>
+      </table>
+      <div style="margin-top:14px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+        <div class="card-stat"><div class="label">Variant A</div><div class="value">2.1%</div><div style="font-size:11px;">CTR · ฿11k spend</div></div>
+        <div class="card-stat" style="border-color:var(--accent);"><div class="label">Variant B 🏆</div><div class="value">2.4%</div><div style="font-size:11px;">CTR · ฿11k spend · winner @ 96%</div></div>
+        <div class="card-stat"><div class="label">Variant C</div><div class="value">1.8%</div><div style="font-size:11px;">CTR · ฿10k spend</div></div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Even-split ad-group cloning per variant</li>
+    <li>Bayesian / frequentist confidence calculator</li>
+    <li>Auto-stop at significance (configurable)</li>
+    <li>Auto-promote winner to scaling campaign</li>
+    <li>Document every test for institutional memory</li>
+    <li>Test templates: hook / CTA / audience / placement / bid</li>
+  </ul>
+</section>
+
+<!-- ============== 15 · Audience Manager ============== -->
+<section id="audiences" class="screen">
+  <h3><span class="num">15</span> 👥 Audience Manager</h3>
+  <p class="hint">Saved audiences, custom audiences from pixel events, and lookalikes — all in one view.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Audiences</div>
+    <div class="body">
+      <div class="toolbar">
+        <button class="btn accent">＋ New audience</button>
+        <select class="input"><option>All types</option><option>Saved</option><option>Custom</option><option>Lookalike</option></select>
+      </div>
+      <table class="tbl">
+        <tr><th>Name</th><th>Type</th><th>Source</th><th>Size</th><th>Used in</th><th>Last refresh</th></tr>
+        <tr><td>TH 18–34 Beauty</td><td><span class="tag dim">Saved</span></td><td>Filter rules</td><td>~2.4M</td><td>3 ad groups</td><td>—</td></tr>
+        <tr><td>Pixel: Purchase 30d</td><td><span class="tag cyan">Custom</span></td><td>Pixel event</td><td>14,210</td><td>2 ad groups</td><td>2h ago</td></tr>
+        <tr><td>LAL 1% — Purchasers</td><td><span class="tag lime">Lookalike</span></td><td>Purchase 30d</td><td>~3.1M</td><td>1 ad group</td><td>1d ago</td></tr>
+        <tr><td>Cart abandoners 7d</td><td><span class="tag cyan">Custom</span></td><td>Add-to-cart - Purchase</td><td>3,820</td><td>1 ad group</td><td>2h ago</td></tr>
+        <tr><td>App engagers 14d</td><td><span class="tag cyan">Custom</span></td><td>App SDK event</td><td>22,890</td><td>—</td><td>2h ago</td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Custom audience builder (event + window + filter)</li>
+    <li>Lookalike configurator (seed + size %)</li>
+    <li>Audience overlap analyzer</li>
+    <li>Refresh schedule per audience</li>
+    <li>Usage map: which ad groups consume each audience</li>
+    <li>One-click duplicate with adjustments</li>
+  </ul>
+</section>
+
+<!-- ============== 16 · Pixel & Event Inspector ============== -->
+<section id="pixel" class="screen">
+  <h3><span class="num">16</span> 🎯 Pixel &amp; Event Inspector</h3>
+  <p class="hint">Verify pixel events fire correctly and match what your ads expect.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Pixel Inspector</div>
+    <div class="body">
+      <div class="grid-stats" style="grid-template-columns:repeat(4,1fr);">
+        <div class="card-stat"><div class="label">Events / hour</div><div class="value">12,420</div><div class="delta">▲ steady</div></div>
+        <div class="card-stat"><div class="label">PageView</div><div class="value">9,810</div><div style="font-size:11px;">last 60m</div></div>
+        <div class="card-stat"><div class="label">AddToCart</div><div class="value">2,140</div><div style="font-size:11px;">last 60m</div></div>
+        <div class="card-stat"><div class="label">Purchase</div><div class="value">312</div><div style="font-size:11px;">last 60m</div></div>
+      </div>
+      <table class="tbl">
+        <tr><th>Time</th><th>Event</th><th>URL / Source</th><th>Value</th><th>Match keys</th><th>Status</th></tr>
+        <tr><td>11:31:02</td><td>Purchase</td><td>shop.example.com/checkout/success</td><td>฿1,290</td><td>email,phone</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td>11:30:58</td><td>AddToCart</td><td>shop.example.com/p/lima-12</td><td>฿390</td><td>email</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td>11:30:51</td><td>PageView</td><td>shop.example.com/p/lima-12</td><td>—</td><td>—</td><td><span class="tag amber">No match keys</span></td></tr>
+        <tr><td>11:30:44</td><td>Purchase</td><td>shop.example.com/checkout/success</td><td>—</td><td>email</td><td><span class="tag red">Missing value</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Live event stream (last 60 min)</li>
+    <li>Event-level validation: schema, value, match keys</li>
+    <li>Per-page-URL event count and deduplication check</li>
+    <li>EMQ score breakdown (event match quality)</li>
+    <li>"Replay" button to send a test event</li>
+    <li>Diff vs expected events from campaign config</li>
+  </ul>
+</section>
+
+<!-- ============== 17 · Conversion Funnel ============== -->
+<section id="funnel" class="screen">
+  <h3><span class="num">17</span> 🪃 Conversion Funnel</h3>
+  <p class="hint">Where do users drop off between impression and purchase? Visualize the leak.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Funnel</div>
+    <div class="body">
+      <div class="funnel-step"><div class="name">Impressions</div><div class="bar"><i style="width:100%"></i></div><div class="pct">2,100,000</div></div>
+      <div class="funnel-step"><div class="name">Clicks (CTR 1.9%)</div><div class="bar"><i style="width:42%"></i></div><div class="pct">40,000</div></div>
+      <div class="funnel-step"><div class="name">Page views (98%)</div><div class="bar"><i style="width:41%"></i></div><div class="pct">39,200</div></div>
+      <div class="funnel-step"><div class="name">View product (62%)</div><div class="bar"><i style="width:26%"></i></div><div class="pct">24,304</div></div>
+      <div class="funnel-step"><div class="name">Add to cart (12%)</div><div class="bar warn"><i style="width:5%"></i></div><div class="pct">2,916</div></div>
+      <div class="funnel-step"><div class="name">Initiate checkout (74%)</div><div class="bar warn"><i style="width:4%"></i></div><div class="pct">2,158</div></div>
+      <div class="funnel-step"><div class="name">Purchase (70%)</div><div class="bar"><i style="width:3%"></i></div><div class="pct">1,510</div></div>
+      <div class="alert-box warn" style="margin-top:8px;">⚠ Biggest drop is <b>Page View → View Product (-38%)</b> — landing page may not match ad creative.</div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Configurable steps from any pixel events</li>
+    <li>Auto-detect biggest drop step</li>
+    <li>Compare segments (campaign / placement / device)</li>
+    <li>Time-on-step distribution</li>
+    <li>Cohort funnel by acquisition week</li>
+    <li>Recommendations: "Try matching landing page hero to ad first frame"</li>
+  </ul>
+</section>
+
+<!-- ============== 18 · Creative Fatigue ============== -->
+<section id="fatigue" class="screen">
+  <h3><span class="num">18</span> 😴 Creative Fatigue Detector</h3>
+  <p class="hint">Spot creatives whose CTR is declining over time and surface refresh suggestions.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Fatigue</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Creative</th><th>Days live</th><th>Frequency</th><th>CTR (week 1)</th><th>CTR (now)</th><th>Decline</th><th>Action</th></tr>
+        <tr><td>Lima_hook_B.mp4</td><td>21</td><td>4.2×</td><td>2.6%</td><td>1.1%</td><td><span class="tag red">-58%</span></td><td><button class="btn">Pause + replace</button></td></tr>
+        <tr><td>Songkran_v3.mp4</td><td>9</td><td>2.1×</td><td>2.0%</td><td>1.9%</td><td><span class="tag green">-5%</span></td><td><button class="btn ghost">Healthy</button></td></tr>
+        <tr><td>Lima_hook_A.mp4</td><td>14</td><td>3.5×</td><td>2.1%</td><td>1.6%</td><td><span class="tag amber">-24%</span></td><td><button class="btn">Refresh creative</button></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Per-creative CTR trend with 7-day rolling slope</li>
+    <li>Frequency cap recommendations</li>
+    <li>"Pause & replace" one-click promotion of an alternate from library</li>
+    <li>Seasonal pattern detection (e.g. weekday vs weekend)</li>
+    <li>Group by hook style / theme to find pattern fatigue</li>
+    <li>Predicted "expected days remaining"</li>
+  </ul>
+</section>
+
+<!-- ============== 19 · Competitor Spy ============== -->
+<section id="competitor" class="screen">
+  <h3><span class="num">19</span> 🕵️ Competitor Ad Spy</h3>
+  <p class="hint">Browse public TikTok Ad Library entries for benchmark inspiration. Read-only, ToS-compliant.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Competitor Spy</div>
+    <div class="body">
+      <div class="toolbar">
+        <input class="input" value="@beauty_competitor" placeholder="Brand / domain / keyword">
+        <select class="input"><option>TH</option><option>SG</option><option>VN</option></select>
+        <select class="input"><option>Last 30 days</option></select>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px;">
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#831843,#9d174d); display:grid; place-items:center; font-size:24px;">🛍️</div>
+          <div style="padding:8px 10px;"><div style="font-size:12px; font-weight:600;">@beauty_competitor</div><div style="font-size:10px; color:var(--txt-2);">Active 18 days · TH</div><div style="margin-top:4px;"><span class="tag lime">Hook: testimonial</span></div></div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#0c4a6e,#0e7490); display:grid; place-items:center; font-size:24px;">📦</div>
+          <div style="padding:8px 10px;"><div style="font-size:12px; font-weight:600;">@beauty_competitor</div><div style="font-size:10px; color:var(--txt-2);">Active 6 days · TH</div><div style="margin-top:4px;"><span class="tag lime">Hook: unboxing</span></div></div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#1e3a8a,#2563eb); display:grid; place-items:center; font-size:24px;">💄</div>
+          <div style="padding:8px 10px;"><div style="font-size:12px; font-weight:600;">@beauty_competitor</div><div style="font-size:10px; color:var(--txt-2);">Active 21 days · TH</div><div style="margin-top:4px;"><span class="tag lime">Hook: tutorial</span></div></div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:8px; background:var(--bg-2); overflow:hidden;">
+          <div style="aspect-ratio:9/16; background:linear-gradient(135deg,#365314,#4d7c0f); display:grid; place-items:center; font-size:24px;">🎁</div>
+          <div style="padding:8px 10px;"><div style="font-size:12px; font-weight:600;">@beauty_competitor</div><div style="font-size:10px; color:var(--txt-2);">Active 3 days · TH</div><div style="margin-top:4px;"><span class="tag lime">Hook: discount</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Search public Ad Library by brand / domain / hashtag</li>
+    <li>Filter by country, days active, format</li>
+    <li>Tag hook style (testimonial / unbox / tutorial / discount)</li>
+    <li>Watch a brand → notify when new creatives appear</li>
+    <li>Save references to inspire your own briefs</li>
+    <li>Read-only · respects TikTok's public Ad Library ToS</li>
+  </ul>
+</section>
+
+<!-- ============== 20 · Hashtag Tracker ============== -->
+<section id="hashtags" class="screen">
+  <h3><span class="num">20</span> #️⃣ Hashtag Tracker</h3>
+  <p class="hint">Trend-watch hashtags relevant to your brand and check what's rising.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Hashtags</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>#hashtag</th><th>Views (7d)</th><th>Δ vs prev 7d</th><th>Posts (7d)</th><th>Sentiment</th><th>Spark</th></tr>
+        <tr><td>#สงกรานต์2569</td><td>2.1B</td><td><span class="tag green">▲ 38%</span></td><td>820k</td><td>0.62</td><td>📈</td></tr>
+        <tr><td>#beautytok</td><td>4.8B</td><td><span class="tag green">▲ 12%</span></td><td>1.2M</td><td>0.71</td><td>📈</td></tr>
+        <tr><td>#ผิวสวย</td><td>620M</td><td><span class="tag amber">▲ 4%</span></td><td>180k</td><td>0.66</td><td>—</td></tr>
+        <tr><td>#limahook</td><td>14M</td><td><span class="tag red">▼ 22%</span></td><td>9k</td><td>0.41</td><td>📉</td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Bookmark hashtags to monitor</li>
+    <li>Weekly trend delta + simple sentiment proxy</li>
+    <li>Cross-reference with your campaigns using each hashtag</li>
+    <li>Suggest related rising hashtags</li>
+    <li>Historical view + seasonality flags</li>
+  </ul>
+</section>
+
+<!-- ============== 21 · Bid Strategy Tester ============== -->
+<section id="bid-tester" class="screen">
+  <h3><span class="num">21</span> 💸 Bid Strategy Tester</h3>
+  <p class="hint">Compare cost-cap / lowest-cost / max-conversion / max-value side by side.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Bid Tester</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Strategy</th><th>Spend</th><th>Conv.</th><th>CPA</th><th>ROAS</th><th>Volatility</th><th>Recommendation</th></tr>
+        <tr><td>Lowest cost</td><td>฿24k</td><td>820</td><td>฿29</td><td>3.0×</td><td>Low</td><td><span class="tag dim">baseline</span></td></tr>
+        <tr><td>Cost cap ฿35</td><td>฿18k</td><td>510</td><td>฿35</td><td>2.4×</td><td>Med</td><td><span class="tag amber">slower</span></td></tr>
+        <tr><td>Max conv. (auto)</td><td>฿24k</td><td>910</td><td>฿26</td><td>3.4×</td><td>Med</td><td><span class="tag green">winner</span></td></tr>
+        <tr><td>Max value</td><td>฿24k</td><td>740</td><td>฿32</td><td>4.2×</td><td>High</td><td><span class="tag lime">try at scale</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Even-spend split across strategies</li>
+    <li>Statistical significance over time window</li>
+    <li>Volatility (CV%) to weigh stability vs scale</li>
+    <li>Auto-promote winner</li>
+    <li>Per-objective tester presets</li>
+  </ul>
+</section>
+
+<!-- ============== 22 · Multi-Currency ============== -->
+<section id="currency" class="screen">
+  <h3><span class="num">22</span> 💱 Multi-Currency Dashboard</h3>
+  <p class="hint">View aggregate spend in your home currency across accounts in different currencies.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Multi-Currency</div>
+    <div class="body">
+      <div class="toolbar">
+        <select class="input"><option>Home: THB</option><option>Home: USD</option><option>Home: EUR</option></select>
+        <select class="input"><option>Source: ECB daily</option><option>Source: openexchangerates</option></select>
+        <span class="muted" style="margin-left:auto;">Last sync: 30 min ago</span>
+      </div>
+      <table class="tbl">
+        <tr><th>Account</th><th>Native spend</th><th>Rate</th><th>THB equivalent</th><th>% of total</th></tr>
+        <tr><td>Songkran TH</td><td>฿412,000</td><td>1.000</td><td>฿412,000</td><td>78%</td></tr>
+        <tr><td>Beauty Co. (USD)</td><td>$8,420</td><td>34.2</td><td>฿287,964</td><td>—</td></tr>
+        <tr><td>Sandbox</td><td>฿11,820</td><td>1.000</td><td>฿11,820</td><td>—</td></tr>
+        <tr><td colspan="3"><b>Total</b></td><td><b>฿711,784</b></td><td>100%</td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Auto FX conversion to home currency</li>
+    <li>Pluggable rate providers (ECB, OXR, manual)</li>
+    <li>Cache rates locally; offline fallback</li>
+    <li>Consolidated dashboard across mixed-currency accounts</li>
+    <li>Export with both native and converted columns</li>
+  </ul>
+</section>
+
+<!-- ============== 23 · Naming Convention ============== -->
+<section id="naming" class="screen">
+  <h3><span class="num">23</span> 🏷️ Naming Convention Enforcer</h3>
+  <p class="hint">Lint campaign / ad-group / ad names against your team's pattern. Auto-rename on import.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Naming</div>
+    <div class="body">
+      <div style="background:var(--bg-2); border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:10px;">
+        <div style="color:var(--accent); font-weight:600; margin-bottom:6px;">Pattern</div>
+        <div class="mono" style="font-size:12px; color:var(--accent-light);">[CC]_[OBJ]_[Brand]_[Campaign]_[Quarter]</div>
+        <div style="margin-top:6px; font-size:12px; color:var(--txt-2);">e.g. <code>TH_CONV_Beauty_Songkran_Q2</code></div>
+      </div>
+      <table class="tbl">
+        <tr><th>Current name</th><th>Lint</th><th>Suggested rename</th></tr>
+        <tr><td>Songkran Push</td><td><span class="tag red">missing CC, OBJ, Brand, Quarter</span></td><td class="mono">TH_CONV_Beauty_Songkran_Q2</td></tr>
+        <tr><td>TH_CONV_Beauty_Always-Retgt_Q2</td><td><span class="tag green">OK</span></td><td>—</td></tr>
+        <tr><td>Test Lima Hook v3</td><td><span class="tag amber">non-standard segment "v3"</span></td><td class="mono">TH_TRAF_Beauty_LimaHookTest_Q2</td></tr>
+      </table>
+      <div style="margin-top:10px;"><button class="btn accent">Apply 2 renames</button> <button class="btn">Edit pattern…</button></div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Token-based pattern with custom segments</li>
+    <li>Lint existing names + propose fixes</li>
+    <li>Bulk rename with preview</li>
+    <li>Apply on create (warn before save)</li>
+    <li>Per-team pattern presets</li>
+  </ul>
+</section>
+
+<!-- ============== 24 · Webhooks ============== -->
+<section id="alerts" class="screen">
+  <h3><span class="num">24</span> 🔔 Webhooks · Slack · Discord · Email</h3>
+  <p class="hint">Pipe alerts and reports to wherever your team lives.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Channels</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Channel</th><th>Endpoint</th><th>Events</th><th>Last delivered</th><th>Status</th></tr>
+        <tr><td>Slack #ads-ops</td><td class="mono">hooks.slack.com/…</td><td>anomaly, rule-fired, daily-summary</td><td>11:18</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td>Email — boss@</td><td class="mono">boss@example.com</td><td>weekly-summary</td><td>Mon 09:00</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td>Discord #alerts</td><td class="mono">discord.com/api/…</td><td>anomaly · severity ≥ warn</td><td>Yesterday</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td>Custom webhook</td><td class="mono">https://api.example.com/ttk</td><td>all</td><td>—</td><td><span class="tag amber">untested</span></td></tr>
+      </table>
+      <div style="margin-top:10px;"><button class="btn accent">＋ Add channel</button> <button class="btn">📤 Send test</button></div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Slack / Discord / Teams / generic webhook / SMTP email</li>
+    <li>Per-channel event filter + severity threshold</li>
+    <li>Templated message body (Liquid-style)</li>
+    <li>Retry + dead-letter queue on delivery failure</li>
+    <li>Test-fire button to verify endpoint</li>
+  </ul>
+</section>
+
+<!-- ============== 25 · Scheduled Reports ============== -->
+<section id="scheduled-reports" class="screen">
+  <h3><span class="num">25</span> 📧 Scheduled Reports</h3>
+  <p class="hint">Daily / weekly / monthly digests delivered automatically.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Reports</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Name</th><th>Recipients</th><th>Schedule</th><th>Format</th><th>Last run</th><th>Status</th></tr>
+        <tr><td>Daily ops digest</td><td>Slack #ads-ops</td><td>Every day 09:00</td><td>Markdown</td><td>Today 09:00</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td>Weekly client report</td><td>client@beauty.com</td><td>Mondays 10:00</td><td>PDF + XLSX</td><td>Mon 10:00</td><td><span class="tag green">OK</span></td></tr>
+        <tr><td>Monthly board summary</td><td>boss@</td><td>1st of month</td><td>PDF</td><td>Apr 1</td><td><span class="tag amber">queued</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Templates: ops digest / client deck / exec summary</li>
+    <li>Pluggable sections (KPIs / charts / top-N tables)</li>
+    <li>Markdown / PDF / XLSX export</li>
+    <li>Per-recipient timezone</li>
+    <li>One-click "send now" preview</li>
+  </ul>
+</section>
+
+<!-- ============== 26 · API Quota Monitor ============== -->
+<section id="quota" class="screen">
+  <h3><span class="num">26</span> 📡 API Quota Monitor</h3>
+  <p class="hint">Track TikTok Marketing API rate-limit usage to avoid throttling surprises.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Quota</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Endpoint</th><th>Limit / minute</th><th>Used (last min)</th><th>Used today</th><th>Pace</th></tr>
+        <tr><td>/campaign/get/</td><td>120</td><td>34</td><td>4,210</td><td><div class="bar"><i style="width:28%"></i></div></td></tr>
+        <tr><td>/campaign/update/</td><td>60</td><td>2</td><td>180</td><td><div class="bar"><i style="width:8%"></i></div></td></tr>
+        <tr><td>/report/integrated/get/</td><td>30</td><td>18</td><td>820</td><td><div class="bar warn"><i style="width:60%"></i></div></td></tr>
+        <tr><td>/oauth2/refresh_token/</td><td>10</td><td>0</td><td>4</td><td><div class="bar"><i style="width:5%"></i></div></td></tr>
+      </table>
+      <div class="alert-box info" style="margin-top:8px;">No 429 responses in last 24h. Closest miss: report endpoint at 18/30 in one minute.</div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Per-endpoint counter with rolling minute / hour / day</li>
+    <li>Color-coded utilization bars</li>
+    <li>429 history with backoff stats</li>
+    <li>Predictive alert when pace projects to limit</li>
+    <li>Tunable polling cadence per endpoint</li>
+  </ul>
+</section>
+
+<!-- ============== 27 · Settings ============== -->
+<section id="settings" class="screen">
+  <h3><span class="num">27</span> ⚙️ Settings &amp; Preferences</h3>
+  <p class="hint">App-wide behavior. Lives in a single editable JSON if you prefer.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Settings</div>
+    <div class="body">
+      <div class="tabs">
+        <div class="tab active">General</div>
+        <div class="tab">API credentials</div>
+        <div class="tab">Notifications</div>
+        <div class="tab">Storage</div>
+        <div class="tab">Appearance</div>
+        <div class="tab">Advanced</div>
+      </div>
+      <table class="tbl">
+        <tr><td style="width:200px;">Theme</td><td><select class="input"><option>Neon Lime (Dark)</option><option>Light</option><option>System</option></select></td></tr>
+        <tr><td>UI scale</td><td><select class="input"><option>100%</option><option>110%</option><option>125%</option></select></td></tr>
+        <tr><td>Language</td><td><select class="input"><option>English</option><option>ภาษาไทย</option></select></td></tr>
+        <tr><td>Default timezone</td><td><select class="input"><option>Asia/Bangkok</option><option>UTC</option><option>System</option></select></td></tr>
+        <tr><td>Mock API mode</td><td><label><input type="checkbox"> Use mocked responses (offline-friendly)</label></td></tr>
+        <tr><td>Audit retention</td><td><select class="input"><option>30 days</option><option>90 days</option><option>1 year</option></select></td></tr>
+        <tr><td>Auto-refresh interval</td><td><select class="input"><option>60 seconds</option><option>5 minutes</option><option>off</option></select></td></tr>
+      </table>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Tabbed settings · all stored in <code>appsettings.local.json</code></li>
+    <li>Live preview of theme + UI scale changes</li>
+    <li>i18n: English + ไทย at launch</li>
+    <li>"Edit JSON directly" power-user pane</li>
+    <li>Reset-to-defaults with confirm</li>
+  </ul>
+</section>
+
+<!-- ============== 28 · Backup ============== -->
+<section id="backup" class="screen">
+  <h3><span class="num">28</span> 💾 Backup &amp; Restore</h3>
+  <p class="hint">One-click portable archive of your DB, configs, and (optionally) audit log.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Backup</div>
+    <div class="body">
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--bg-2);">
+          <div style="color:var(--accent); font-weight:600; margin-bottom:6px;">Create backup</div>
+          <div style="font-size:12px; color:var(--txt-2);">
+            <label><input type="checkbox" checked> Database (accounts, rules)</label><br>
+            <label><input type="checkbox" checked> Settings + secrets (encrypted)</label><br>
+            <label><input type="checkbox"> Audit log</label><br>
+            <label><input type="checkbox"> Creative library files</label>
+          </div>
+          <div style="margin-top:10px;"><button class="btn accent">⤓ Save .ttkbak</button></div>
+          <div class="dim" style="font-size:11px; margin-top:6px;">Recommended every 7 days · last backup 3 days ago</div>
+        </div>
+        <div style="border:1px solid var(--border); border-radius:8px; padding:14px; background:var(--bg-2);">
+          <div style="color:var(--accent); font-weight:600; margin-bottom:6px;">Restore from file</div>
+          <div style="border:1px dashed var(--border-2); border-radius:6px; padding:18px; text-align:center; color:var(--txt-2); font-size:12px;">
+            Drop .ttkbak here<br><span class="dim">or click to browse</span>
+          </div>
+          <div class="alert-box warn" style="margin-top:8px;">Restore will overwrite current DB · a snapshot of "before" is taken automatically.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Single .ttkbak archive, AES-encrypted</li>
+    <li>Selective backup (skip log / creatives to keep small)</li>
+    <li>Auto-snapshot before destructive restores</li>
+    <li>Schedule daily auto-backup to a folder</li>
+    <li>Verify integrity (HMAC) on restore</li>
+  </ul>
+</section>
+
+<!-- ============== 29 · Health Check ============== -->
+<section id="health" class="screen">
+  <h3><span class="num">29</span> 🩺 Health Check &amp; About</h3>
+  <p class="hint">One panel that proves everything is wired up correctly.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Health</div>
+    <div class="body">
+      <table class="tbl">
+        <tr><th>Check</th><th>Status</th><th>Detail</th></tr>
+        <tr><td>SQLite database</td><td><span class="tag green">OK</span></td><td>v3 · 412 KB · 21 rules · 4,210 audit rows</td></tr>
+        <tr><td>Token store (DPAPI)</td><td><span class="tag green">OK</span></td><td>3 advertisers · all tokens valid</td></tr>
+        <tr><td>Quartz scheduler</td><td><span class="tag green">OK</span></td><td>21 active rules · next fire in 3:42</td></tr>
+        <tr><td>TikTok API ping</td><td><span class="tag green">OK</span></td><td>/advertiser/info/ · 184 ms</td></tr>
+        <tr><td>FX rate provider</td><td><span class="tag amber">Stale</span></td><td>Last sync 30 min ago — refreshing now</td></tr>
+        <tr><td>Disk space</td><td><span class="tag green">OK</span></td><td>120 GB free</td></tr>
+        <tr><td>Update channel</td><td><span class="tag dim">v0.1.0</span></td><td>Latest stable · check now</td></tr>
+      </table>
+      <div style="margin-top:14px; border-top:1px solid var(--border); padding-top:10px; font-size:12px; color:var(--txt-2);">
+        <b style="color:var(--accent);">TTK Manager v0.1.0</b> · .NET 9 · Avalonia 12 · Quartz 3<br>
+        © xman studio · MIT (planned) · <a href="https://github.com/xjanova/ttkmanager">github.com/xjanova/ttkmanager</a>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>One-glance system status</li>
+    <li>One-click "fix" suggestion per failing check</li>
+    <li>Version, runtime, build info</li>
+    <li>Update channel + release notes link</li>
+    <li>Diagnostic ZIP export for support</li>
+  </ul>
+</section>
+
+<!-- ============== 30 · Shortcuts ============== -->
+<section id="shortcuts" class="screen">
+  <h3><span class="num">30</span> ⌨️ Keyboard Shortcuts</h3>
+  <p class="hint">Power-user friendly. Everything frequent reachable from the keyboard.</p>
+  <div class="fake-app">
+    <div class="titlebar"><div class="logo">TTK</div><span class="accent-text">TTK Manager</span> · Shortcuts</div>
+    <div class="body">
+      <div class="row">
+        <div class="col">
+          <div class="muted" style="font-size:12px; margin-bottom:6px;">Navigation</div>
+          <table class="tbl">
+            <tr><td>Dashboard</td><td><span class="kbd">Ctrl</span> + <span class="kbd">1</span></td></tr>
+            <tr><td>Accounts</td><td><span class="kbd">Ctrl</span> + <span class="kbd">2</span></td></tr>
+            <tr><td>Schedules</td><td><span class="kbd">Ctrl</span> + <span class="kbd">3</span></td></tr>
+            <tr><td>Logs</td><td><span class="kbd">Ctrl</span> + <span class="kbd">4</span></td></tr>
+            <tr><td>Reports</td><td><span class="kbd">Ctrl</span> + <span class="kbd">5</span></td></tr>
+            <tr><td>Command palette</td><td><span class="kbd">Ctrl</span> + <span class="kbd">K</span></td></tr>
+            <tr><td>Search anywhere</td><td><span class="kbd">/</span></td></tr>
+          </table>
+        </div>
+        <div class="col">
+          <div class="muted" style="font-size:12px; margin-bottom:6px;">Actions</div>
+          <table class="tbl">
+            <tr><td>New schedule rule</td><td><span class="kbd">Ctrl</span> + <span class="kbd">N</span></td></tr>
+            <tr><td>Connect account</td><td><span class="kbd">Ctrl</span> + <span class="kbd">Shift</span> + <span class="kbd">A</span></td></tr>
+            <tr><td>Refresh data</td><td><span class="kbd">F5</span></td></tr>
+            <tr><td>Force-fire selected rule</td><td><span class="kbd">Ctrl</span> + <span class="kbd">Enter</span></td></tr>
+            <tr><td>Toggle selected rule</td><td><span class="kbd">Space</span></td></tr>
+            <tr><td>Delete selected</td><td><span class="kbd">Del</span></td></tr>
+            <tr><td>Settings</td><td><span class="kbd">Ctrl</span> + <span class="kbd">,</span></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ul class="list-features">
+    <li>Command palette (Cmd-K-style) over everything</li>
+    <li>Customizable in settings</li>
+    <li>Cheat sheet always reachable from <span class="kbd">?</span></li>
+    <li>Conflict detection</li>
+  </ul>
+</section>
+
+<div class="empty-hint" style="margin-top:30px;">
+  End of vision · 30 mockup screens · This is the north star, not the v0.1 scope. We ship Phase 1 first.
+</div>
+
+</main>
+
+</div>
+
+<script>
+// Heatmap synthetic data
+(function () {
+  const hm = document.getElementById('hm');
+  if (!hm) return;
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const seed = [
+    [0,0,0,0,1,1,2,3,4,4,3,2,2,2,3,4,5,5,5,4,3,2,1,0],
+    [0,0,0,0,1,1,2,3,3,3,2,2,2,3,3,4,5,5,5,4,3,2,1,0],
+    [0,0,0,0,1,1,2,3,3,3,2,2,3,3,4,4,5,5,4,4,3,2,1,0],
+    [0,0,0,0,1,2,2,3,3,3,3,2,3,3,4,4,5,5,5,4,3,2,1,0],
+    [0,0,0,0,1,2,3,4,4,4,3,3,3,4,4,5,5,5,5,5,4,3,2,1],
+    [1,0,0,0,1,2,2,3,3,3,4,4,5,5,5,5,5,5,4,4,3,2,1,1],
+    [1,0,0,0,1,1,1,2,3,3,4,5,5,5,5,4,4,4,3,3,2,2,1,1],
+  ];
+  hm.innerHTML = '';
+  // header row
+  hm.innerHTML += '<div></div>';
+  for (let h = 0; h < 24; h++) hm.innerHTML += `<div class="lbl center">${h.toString().padStart(2,'0')}</div>`;
+  // rows
+  for (let d = 0; d < 7; d++) {
+    hm.innerHTML += `<div class="lbl">${days[d]}</div>`;
+    for (let h = 0; h < 24; h++) {
+      hm.innerHTML += `<div class="cell" data-v="${seed[d][h]}"></div>`;
+    }
+  }
+})();
+</script>
+
+</body>
+</html>
