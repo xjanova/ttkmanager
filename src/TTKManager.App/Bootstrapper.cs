@@ -57,6 +57,7 @@ public static class Bootstrapper
         services.AddSingleton<BackupService>();
         services.AddSingleton<HealthCheckService>();
         services.AddSingleton<MockSamplerService>();
+        services.AddSingleton<DemoModeService>();
 
         services.AddTransient<ShellViewModel>();
         services.AddTransient<MainWindowViewModel>();

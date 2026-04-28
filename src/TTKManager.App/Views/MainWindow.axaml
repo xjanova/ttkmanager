@@ -17,18 +17,35 @@
         <vm:ShellViewModel/>
     </Design.DataContext>
 
-    <Grid ColumnDefinitions="280,*">
-
-        <Border Grid.Column="0" Background="{StaticResource HeaderGradientBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
-            <DockPanel>
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12" Margin="16,16,16,18">
-                    <Image Source="/Assets/logottk.png" Width="40" Height="40"/>
+    <DockPanel>
+        <Border DockPanel.Dock="Top" Background="{StaticResource HeaderGradientBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20,10">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                    <Image Source="/Assets/logottk.png" Width="32" Height="32"/>
                     <StackPanel VerticalAlignment="Center">
-                        <TextBlock Text="TTK Manager" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
-                        <TextBlock Text="TikTok Ads ad scheduler" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="TTK Manager" FontSize="14" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                        <TextBlock Text="TikTok Marketing API ad scheduler" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
                     </StackPanel>
                 </StackPanel>
 
+                <Border Grid.Column="2" Padding="10,5" CornerRadius="14" VerticalAlignment="Center"
+                        Background="{StaticResource BgElevatedBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                        <Ellipse Width="8" Height="8" VerticalAlignment="Center">
+                            <Ellipse.Styles>
+                                <Style Selector="Ellipse"><Setter Property="Fill" Value="{StaticResource TextTertiaryBrush}"/></Style>
+                            </Ellipse.Styles>
+                        </Ellipse>
+                        <TextBlock Text="{Binding DemoStatusLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" VerticalAlignment="Center"/>
+                        <Button Content="{Binding DemoButtonLabel}" Command="{Binding ToggleDemoCommand}" Classes="accent" Padding="10,4"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid ColumnDefinitions="280,*">
+
+            <Border Grid.Column="0" Background="{StaticResource BgPrimaryBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
                 <ScrollViewer>
                     <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding Selected, Mode=TwoWay}" Background="Transparent" BorderThickness="0" Padding="6">
                         <ListBox.ItemTemplate>
@@ -44,12 +61,12 @@
                         </ListBox.ItemTemplate>
                     </ListBox>
                 </ScrollViewer>
-            </DockPanel>
-        </Border>
+            </Border>
 
-        <Border Grid.Column="1" Padding="20" Background="{StaticResource BgPrimaryBrush}">
-            <ContentControl Content="{Binding Current}"/>
-        </Border>
+            <Border Grid.Column="1" Padding="20" Background="{StaticResource BgPrimaryBrush}">
+                <ContentControl Content="{Binding Current}"/>
+            </Border>
 
-    </Grid>
+        </Grid>
+    </DockPanel>
 </Window>

@@ -122,7 +122,179 @@ public sealed class Database : IDisposable
                 revenue TEXT NOT NULL
             );
             CREATE INDEX IF NOT EXISTS idx_samples_campaign_time ON metric_samples(campaign_id, timestamp DESC);
+
+            CREATE TABLE IF NOT EXISTS app_state (
+                key TEXT PRIMARY KEY,
+                value TEXT NOT NULL
+            );
         ");
+
+        AddColumnIfMissing(conn, "accounts", "is_demo", "INTEGER NOT NULL DEFAULT 0");
+        AddColumnIfMissing(conn, "schedule_rules", "is_demo", "INTEGER NOT NULL DEFAULT 0");
+        AddColumnIfMissing(conn, "audit_log", "is_demo", "INTEGER NOT NULL DEFAULT 0");
+        AddColumnIfMissing(conn, "auto_rules", "is_demo", "INTEGER NOT NULL DEFAULT 0");
+        AddColumnIfMissing(conn, "budget_caps", "is_demo", "INTEGER NOT NULL DEFAULT 0");
+        AddColumnIfMissing(conn, "alerts", "is_demo", "INTEGER NOT NULL DEFAULT 0");
+        AddColumnIfMissing(conn, "metric_samples", "is_demo", "INTEGER NOT NULL DEFAULT 0");
+    }
+
+    private static void AddColumnIfMissing(SqliteConnection conn, string table, string column, string definition)
+    {
+        var exists = conn.QueryFirstOrDefault<long>(
+            $"SELECT count(*) FROM pragma_table_info('{table}') WHERE name = @col",
+            new { col = column });
+        if (exists == 0)
+            conn.Execute($"ALTER TABLE {table} ADD COLUMN {column} {definition}");
+    }
+
+    public async Task<string?> GetStateAsync(string key)
+    {
+        using var conn = Open();
+        return await conn.QueryFirstOrDefaultAsync<string>("SELECT value FROM app_state WHERE key = @key", new { key });
+    }
+
+    public async Task SetStateAsync(string key, string value)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT INTO app_state(key, value) VALUES(@key, @value)
+            ON CONFLICT(key) DO UPDATE SET value = excluded.value", new { key, value });
+    }
+
+    public async Task DeleteDemoDataAsync()
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            DELETE FROM metric_samples WHERE is_demo = 1;
+            DELETE FROM alerts WHERE is_demo = 1;
+            DELETE FROM audit_log WHERE is_demo = 1;
+            DELETE FROM budget_caps WHERE is_demo = 1;
+            DELETE FROM auto_rules WHERE is_demo = 1;
+            DELETE FROM schedule_rules WHERE is_demo = 1;
+            DELETE FROM accounts WHERE is_demo = 1;");
+    }
+
+    public async Task InsertDemoAccountAsync(TikTokAccount account)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT OR REPLACE INTO accounts (advertiser_id, name, currency, country, encrypted_refresh_token, encrypted_access_token, access_token_expires_at, created_at, is_demo)
+            VALUES (@AdvertiserId, @Name, @Currency, @Country, @ERT, @EAT, @Exp, @Created, 1)",
+            new
+            {
+                account.AdvertiserId,
+                account.Name,
+                account.Currency,
+                account.Country,
+                ERT = account.EncryptedRefreshToken,
+                EAT = account.EncryptedAccessToken,
+                Exp = account.AccessTokenExpiresAt.ToUnixTimeSeconds(),
+                Created = account.CreatedAt.ToUnixTimeSeconds()
+            });
+    }
+
+    public async Task InsertDemoRuleAsync(ScheduleRule rule, DateTimeOffset createdAt)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT INTO schedule_rules (advertiser_id, campaign_id, name, action, budget_amount, cron_expression, time_zone_id, enabled, created_at, is_demo)
+            VALUES (@AdvertiserId, @CampaignId, @Name, @Action, @Budget, @CronExpression, @TimeZoneId, @Enabled, @CreatedAt, 1)",
+            new
+            {
+                rule.AdvertiserId, rule.CampaignId, rule.Name,
+                Action = rule.Action.ToString(),
+                Budget = rule.BudgetAmount?.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                rule.CronExpression, rule.TimeZoneId,
+                Enabled = rule.Enabled ? 1 : 0,
+                CreatedAt = createdAt.ToUnixTimeSeconds()
+            });
+    }
+
+    public async Task InsertDemoAutoRuleAsync(AutoRule r)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT INTO auto_rules (name, advertiser_id, campaign_id_scope, metric, comparator, threshold, window_minutes, action, action_amount, cooldown_minutes, enabled, last_fired_at, created_at, is_demo)
+            VALUES (@Name, @AdvertiserId, @Scope, @Metric, @Comparator, @Threshold, @Window, @Action, @Amount, @Cooldown, @Enabled, @LastFired, @CreatedAt, 1)",
+            new
+            {
+                r.Name, r.AdvertiserId,
+                Scope = r.CampaignIdScope,
+                Metric = r.Metric.ToString(),
+                Comparator = r.Comparator.ToString(),
+                Threshold = r.Threshold.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                Window = r.WindowMinutes,
+                Action = r.Action.ToString(),
+                Amount = r.ActionAmount?.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                Cooldown = r.CooldownMinutes,
+                Enabled = r.Enabled ? 1 : 0,
+                LastFired = r.LastFiredAt?.ToUnixTimeSeconds(),
+                CreatedAt = r.CreatedAt.ToUnixTimeSeconds()
+            });
+    }
+
+    public async Task InsertDemoBudgetCapAsync(BudgetCap c)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT INTO budget_caps (advertiser_id, campaign_id_scope, period, cap_amount, currency, auto_pause_on_cap, created_at, is_demo)
+            VALUES (@AdvertiserId, @Scope, @Period, @Cap, @Currency, @AutoPause, @CreatedAt, 1)",
+            new
+            {
+                c.AdvertiserId,
+                Scope = c.CampaignIdScope,
+                Period = c.Period.ToString(),
+                Cap = c.CapAmount.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                c.Currency,
+                AutoPause = c.AutoPauseOnCap ? 1 : 0,
+                CreatedAt = c.CreatedAt.ToUnixTimeSeconds()
+            });
+    }
+
+    public async Task InsertDemoAlertAsync(Alert a)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT INTO alerts (timestamp, severity, source, title, body, advertiser_id, campaign_id, dismissed, is_demo)
+            VALUES (@Timestamp, @Severity, @Source, @Title, @Body, @AdvertiserId, @CampaignId, 0, 1)",
+            new
+            {
+                Timestamp = a.Timestamp.ToUnixTimeSeconds(),
+                Severity = a.Severity.ToString(),
+                Source = a.Source.ToString(),
+                a.Title, a.Body, a.AdvertiserId, a.CampaignId
+            });
+    }
+
+    public async Task InsertDemoAuditAsync(AuditLogEntry e)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT INTO audit_log (timestamp, rule_id, advertiser_id, campaign_id, action, status, detail, error, is_demo)
+            VALUES (@Timestamp, @RuleId, @AdvertiserId, @CampaignId, @Action, @Status, @Detail, @Error, 1)",
+            new
+            {
+                Timestamp = e.Timestamp.ToUnixTimeSeconds(),
+                e.RuleId, e.AdvertiserId, e.CampaignId, e.Action,
+                Status = e.Status.ToString(),
+                e.Detail, e.Error
+            });
+    }
+
+    public async Task InsertDemoSampleAsync(MetricSample m)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync(@"
+            INSERT INTO metric_samples (timestamp, advertiser_id, campaign_id, spend, impressions, clicks, conversions, revenue, is_demo)
+            VALUES (@Timestamp, @AdvertiserId, @CampaignId, @Spend, @Impressions, @Clicks, @Conversions, @Revenue, 1)",
+            new
+            {
+                Timestamp = m.Timestamp.ToUnixTimeSeconds(),
+                m.AdvertiserId, m.CampaignId,
+                Spend = m.Spend.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                m.Impressions, m.Clicks, m.Conversions,
+                Revenue = m.Revenue.ToString(System.Globalization.CultureInfo.InvariantCulture)
+            });
     }
 
     public async Task<IReadOnlyList<AutoRule>> ListAutoRulesAsync()
