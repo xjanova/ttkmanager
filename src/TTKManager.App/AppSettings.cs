@@ -6,7 +6,7 @@ public sealed class AppSettings
 
     public string TikTokAppId { get; init; } = "";
     public string TikTokAppSecret { get; init; } = "";
-    public string RedirectUri { get; init; } = "https://xjanova.github.io/ttkmanager/callback.html";
+    public string RedirectUri { get; init; } = "https://xman4289.com/ttkmanager/callback";
 
     public bool UseMockApi { get; init; } = true;
 

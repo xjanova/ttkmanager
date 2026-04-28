@@ -24,7 +24,7 @@ public sealed class TikTokApiClient : ITikTokApiClient
         _log = log;
         _creds = creds;
         _http.BaseAddress = new Uri(BaseUrl);
-        _http.DefaultRequestHeaders.UserAgent.ParseAdd("TTKManager/0.1 (+https://github.com/xjanova/ttkmanager)");
+        _http.DefaultRequestHeaders.UserAgent.ParseAdd("TTKManager/0.1 (+https://xman4289.com/ttkmanager)");
 
         _retry = new ResiliencePipelineBuilder<HttpResponseMessage>()
             .AddRetry(new RetryStrategyOptions<HttpResponseMessage>

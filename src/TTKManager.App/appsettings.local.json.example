@@ -2,6 +2,6 @@
   "DatabasePath": "ttkmanager.db",
   "TikTokAppId": "PUT_YOUR_APP_ID_HERE",
   "TikTokAppSecret": "PUT_YOUR_APP_SECRET_HERE",
-  "RedirectUri": "https://xjanova.github.io/ttkmanager/callback.html",
+  "RedirectUri": "https://xman4289.com/ttkmanager/callback",
   "UseMockApi": false
 }

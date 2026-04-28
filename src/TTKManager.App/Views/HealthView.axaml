@@ -31,7 +31,7 @@
                 <StackPanel Spacing="6">
                     <TextBlock Text="About" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
                     <TextBlock Text="{Binding Version}" Foreground="{StaticResource TextPrimaryBrush}"/>
-                    <TextBlock Text="© xman studio · github.com/xjanova/ttkmanager" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                    <TextBlock Text="© xman studio · xman4289.com" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
                 </StackPanel>
             </Border>
 
