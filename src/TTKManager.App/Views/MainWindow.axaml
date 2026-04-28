@@ -4,50 +4,52 @@
         xmlns:views="using:TTKManager.App.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="640"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="800"
         x:Class="TTKManager.App.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
-        Width="1080" Height="700"
-        MinWidth="900" MinHeight="560"
+        x:DataType="vm:ShellViewModel"
+        Width="1280" Height="800"
+        MinWidth="1100" MinHeight="640"
         Icon="/Assets/app.ico"
         Background="{StaticResource BgPrimaryBrush}"
         Title="{Binding Title}">
 
     <Design.DataContext>
-        <vm:MainWindowViewModel/>
+        <vm:ShellViewModel/>
     </Design.DataContext>
 
-    <DockPanel>
-        <Border DockPanel.Dock="Top"
-                Background="{StaticResource HeaderGradientBrush}"
-                BorderBrush="{StaticResource BorderBrush}"
-                BorderThickness="0,0,0,1"
-                Padding="20,12">
-            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
-                <Image Grid.Column="0" Source="/Assets/logottk.png" Width="40" Height="40" VerticalAlignment="Center"/>
-                <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
-                    <TextBlock Text="TTK Manager" Foreground="{StaticResource AccentPrimaryBrush}" FontSize="18" FontWeight="Bold"/>
-                    <TextBlock Text="TikTok Marketing API ad scheduler" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
-                </StackPanel>
-                <Border Grid.Column="3" Background="{StaticResource BgElevatedBrush}" CornerRadius="14" Padding="10,4" VerticalAlignment="Center" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
-                    <StackPanel Orientation="Horizontal" Spacing="6">
-                        <Ellipse Width="8" Height="8" Fill="{StaticResource AccentPrimaryBrush}" VerticalAlignment="Center"/>
-                        <TextBlock Text="Local mode" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" VerticalAlignment="Center"/>
+    <Grid ColumnDefinitions="280,*">
+
+        <Border Grid.Column="0" Background="{StaticResource HeaderGradientBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="12" Margin="16,16,16,18">
+                    <Image Source="/Assets/logottk.png" Width="40" Height="40"/>
+                    <StackPanel VerticalAlignment="Center">
+                        <TextBlock Text="TTK Manager" FontSize="16" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                        <TextBlock Text="TikTok Ads ad scheduler" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
                     </StackPanel>
-                </Border>
-            </Grid>
+                </StackPanel>
+
+                <ScrollViewer>
+                    <ListBox ItemsSource="{Binding Items}" SelectedItem="{Binding Selected, Mode=TwoWay}" Background="Transparent" BorderThickness="0" Padding="6">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="vm:NavSection">
+                                <Grid ColumnDefinitions="22,*,Auto" Height="32">
+                                    <TextBlock Grid.Column="0" Text="{Binding Emoji}" VerticalAlignment="Center" FontSize="13"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center" FontSize="13" Foreground="{StaticResource TextPrimaryBrush}" Margin="6,0"/>
+                                    <Border Grid.Column="2" Padding="6,2" CornerRadius="8" Background="{StaticResource BgElevatedBrush}" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Phase}" FontSize="9" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </DockPanel>
         </Border>
 
-        <TabControl Margin="12,8,12,12">
-            <TabItem Header="Accounts">
-                <views:AccountsView DataContext="{Binding Accounts}"/>
-            </TabItem>
-            <TabItem Header="Schedules">
-                <views:SchedulesView DataContext="{Binding Schedules}"/>
-            </TabItem>
-            <TabItem Header="Logs">
-                <views:LogsView DataContext="{Binding Logs}"/>
-            </TabItem>
-        </TabControl>
-    </DockPanel>
+        <Border Grid.Column="1" Padding="20" Background="{StaticResource BgPrimaryBrush}">
+            <ContentControl Content="{Binding Current}"/>
+        </Border>
+
+    </Grid>
 </Window>

@@ -28,7 +28,7 @@ public partial class App : Application
         {
             desktop.MainWindow = new MainWindow
             {
-                DataContext = Services.GetRequiredService<MainWindowViewModel>(),
+                DataContext = Services.GetRequiredService<ShellViewModel>(),
             };
             desktop.ShutdownRequested += async (_, _) =>
             {

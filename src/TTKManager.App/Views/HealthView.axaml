@@ -1,0 +1,41 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:services="using:TTKManager.App.Services"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500"
+             x:Class="TTKManager.App.Views.HealthView"
+             x:DataType="vm:HealthViewModel">
+
+    <Design.DataContext><vm:HealthViewModel/></Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="14">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Health Check" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" VerticalAlignment="Center"/>
+                <Button Content="🔄 Run Now" Command="{Binding RunCommand}" Classes="accent"/>
+            </StackPanel>
+
+            <Border Classes="card">
+                <DataGrid ItemsSource="{Binding Checks}" IsReadOnly="True" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Check" Binding="{Binding Name}" Width="200"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                        <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="About" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <TextBlock Text="{Binding Version}" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    <TextBlock Text="© xman studio · github.com/xjanova/ttkmanager" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource AccentLightBrush}"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

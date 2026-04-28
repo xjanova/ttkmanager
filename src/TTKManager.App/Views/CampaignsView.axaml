@@ -1,0 +1,38 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.CampaignsView"
+             x:DataType="vm:CampaignsViewModel">
+
+    <Design.DataContext><vm:CampaignsViewModel/></Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <TextBlock Text="Campaigns" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" Margin="0,0,0,10"/>
+
+        <Border Grid.Row="1" Classes="card" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Account" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <ComboBox Width="280" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate><DataTemplate DataType="models:TikTokAccount"><TextBlock Text="{Binding Name}"/></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Content="↻ Refresh" Command="{Binding RefreshCommand}"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Campaigns}" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Campaign" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding CampaignId}" Width="180"/>
+                <DataGridTextColumn Header="Objective" Binding="{Binding Objective}" Width="160"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100"/>
+                <DataGridTextColumn Header="Budget mode" Binding="{Binding BudgetMode}" Width="120"/>
+                <DataGridTextColumn Header="Budget" Binding="{Binding Budget}" Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,70 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.AutoRulesView"
+             x:DataType="vm:AutoRulesViewModel">
+
+    <Design.DataContext><vm:AutoRulesViewModel/></Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <TextBlock Text="Auto-Rules Engine" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" Margin="0,0,0,10"/>
+
+        <Border Grid.Row="1" Classes="card" Margin="0,0,0,10">
+            <Grid ColumnDefinitions="120,*,120,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8" ColumnSpacing="10">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Rule name" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding NewName, Mode=TwoWay}" Watermark="e.g. Pause if CPC explodes"/>
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Account" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding NewAccount, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate><DataTemplate DataType="models:TikTokAccount"><TextBlock Text="{Binding Name}"/></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="Window (min)" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <NumericUpDown Grid.Row="1" Grid.Column="3" Value="{Binding NewWindow, Mode=TwoWay}" Minimum="5" Maximum="1440" Increment="5"/>
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="When metric" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                    <ComboBox ItemsSource="{Binding Metrics}" SelectedItem="{Binding NewMetric, Mode=TwoWay}" Width="120"/>
+                    <ComboBox ItemsSource="{Binding Comparators}" SelectedItem="{Binding NewComparator, Mode=TwoWay}" Width="160"/>
+                    <NumericUpDown Value="{Binding NewThreshold, Mode=TwoWay}" Minimum="0" Increment="0.1" Width="120"/>
+                </StackPanel>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="Cooldown (min)" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <NumericUpDown Grid.Row="2" Grid.Column="3" Value="{Binding NewCooldown, Mode=TwoWay}" Minimum="0" Increment="15"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Then" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <StackPanel Grid.Row="3" Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                    <ComboBox ItemsSource="{Binding Actions}" SelectedItem="{Binding NewAction, Mode=TwoWay}" Width="220"/>
+                    <NumericUpDown Value="{Binding NewAmount, Mode=TwoWay}" Minimum="0" Increment="10" Width="120"/>
+                </StackPanel>
+                <StackPanel Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="8">
+                    <Button Content="＋ Add Rule" Command="{Binding AddCommand}" Classes="accent"/>
+                    <Button Content="▶ Evaluate Now" Command="{Binding EvaluateNowCommand}"/>
+                    <Button Content="↻ Refresh" Command="{Binding RefreshCommand}"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <Button Content="Toggle" Command="{Binding ToggleCommand}"/>
+            <Button Content="Delete" Command="{Binding DeleteCommand}" Classes="danger"/>
+            <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="3" ItemsSource="{Binding Rules}" SelectedItem="{Binding SelectedRule, Mode=TwoWay}" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="60"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>
+                <DataGridTextColumn Header="Metric" Binding="{Binding Metric}" Width="100"/>
+                <DataGridTextColumn Header="Op" Binding="{Binding Comparator}" Width="120"/>
+                <DataGridTextColumn Header="Threshold" Binding="{Binding Threshold}" Width="90"/>
+                <DataGridTextColumn Header="Window m" Binding="{Binding WindowMinutes}" Width="80"/>
+                <DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="160"/>
+                <DataGridTextColumn Header="Last fired" Binding="{Binding LastFiredAt}" Width="180"/>
+                <DataGridCheckBoxColumn Header="On" Binding="{Binding Enabled}" Width="50"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

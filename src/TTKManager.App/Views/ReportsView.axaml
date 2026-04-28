@@ -1,0 +1,62 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.ReportsView"
+             x:DataType="vm:ReportsViewModel">
+
+    <Design.DataContext><vm:ReportsViewModel/></Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <TextBlock Text="Performance Reports" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" Margin="0,0,0,10"/>
+
+        <Border Grid.Row="1" Classes="card" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Account" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <ComboBox Width="240" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate><DataTemplate DataType="models:TikTokAccount"><TextBlock Text="{Binding Name}"/></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Text="Window (days)" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <ComboBox Width="80" ItemsSource="{Binding WindowOptions}" SelectedItem="{Binding WindowDays, Mode=TwoWay}"/>
+                <Button Content="↻ Refresh" Command="{Binding RefreshCommand}"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <UniformGrid Grid.Row="2" Columns="4" Rows="1" Margin="0,0,0,10">
+            <Border Classes="card" Margin="0,0,8,0">
+                <StackPanel><TextBlock Text="SPEND" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{Binding TotalSpend}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/></StackPanel>
+            </Border>
+            <Border Classes="card" Margin="4,0,4,0">
+                <StackPanel><TextBlock Text="IMPRESSIONS" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{Binding TotalImpressions}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/></StackPanel>
+            </Border>
+            <Border Classes="card" Margin="4,0,4,0">
+                <StackPanel><TextBlock Text="AVG CPM" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{Binding AvgCpm}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/></StackPanel>
+            </Border>
+            <Border Classes="card" Margin="8,0,0,0">
+                <StackPanel><TextBlock Text="ROAS" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <TextBlock Text="{Binding AvgRoas}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/></StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <DataGrid Grid.Row="3" ItemsSource="{Binding Rows}" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Campaign" Binding="{Binding CampaignId}" Width="180"/>
+                <DataGridTextColumn Header="Spend" Binding="{Binding SpendText}" Width="110"/>
+                <DataGridTextColumn Header="Imp." Binding="{Binding Impressions}" Width="100"/>
+                <DataGridTextColumn Header="Clicks" Binding="{Binding Clicks}" Width="80"/>
+                <DataGridTextColumn Header="CTR" Binding="{Binding CtrText}" Width="80"/>
+                <DataGridTextColumn Header="CPM" Binding="{Binding CpmText}" Width="80"/>
+                <DataGridTextColumn Header="CPC" Binding="{Binding CpcText}" Width="80"/>
+                <DataGridTextColumn Header="Conv." Binding="{Binding Conversions}" Width="80"/>
+                <DataGridTextColumn Header="ROAS" Binding="{Binding RoasText}" Width="80"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

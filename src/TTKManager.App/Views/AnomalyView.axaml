@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.AnomalyView"
+             x:DataType="vm:AnomalyViewModel">
+
+    <Design.DataContext><vm:AnomalyViewModel/></Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <TextBlock Text="Anomaly Detector" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" Margin="0,0,0,10"/>
+
+        <Border Grid.Row="1" Classes="card" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="🔍 Scan Now" Command="{Binding ScanNowCommand}" Classes="accent"/>
+                <Button Content="↻ Refresh" Command="{Binding RefreshCommand}"/>
+                <Button Content="🧪 Seed demo samples (14 days)" Command="{Binding SeedSamplesCommand}"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Alerts}" IsReadOnly="True" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Time" Binding="{Binding Timestamp}" Width="180"/>
+                <DataGridTextColumn Header="Severity" Binding="{Binding Severity}" Width="100"/>
+                <DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="120"/>
+                <DataGridTextColumn Header="Title" Binding="{Binding Title}" Width="*"/>
+                <DataGridTextColumn Header="Body" Binding="{Binding Body}" Width="2*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

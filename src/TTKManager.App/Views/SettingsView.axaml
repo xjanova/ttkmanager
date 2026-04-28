@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.SettingsView"
+             x:DataType="vm:SettingsViewModel">
+
+    <Design.DataContext><vm:SettingsViewModel/></Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="14">
+            <TextBlock Text="Settings" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+
+            <Border Classes="card">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="TikTok Marketing API credentials" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <Grid ColumnDefinitions="180,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="8" ColumnSpacing="10">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="App ID" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding TikTokAppId, Mode=TwoWay}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="App Secret" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" PasswordChar="•" Text="{Binding TikTokAppSecret, Mode=TwoWay}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Redirect URI" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding RedirectUri, Mode=TwoWay}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Storage &amp; mode" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <Grid ColumnDefinitions="180,*" RowDefinitions="Auto,Auto" RowSpacing="8" ColumnSpacing="10">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Database path" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding DatabasePath, Mode=TwoWay}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Mock API mode" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding UseMockApi, Mode=TwoWay}" Content="Use mock data (offline / pre-approval)" Foreground="{StaticResource TextPrimaryBrush}"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Content="💾 Save" Command="{Binding SaveCommand}" Classes="accent"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="{StaticResource AccentLightBrush}"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

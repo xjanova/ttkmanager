@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.ComingSoonView"
+             x:DataType="vm:ComingSoonViewModel">
+
+    <Design.DataContext>
+        <vm:ComingSoonViewModel/>
+    </Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="20">
+            <Border Classes="card">
+                <StackPanel Spacing="10">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Border Background="{StaticResource AccentMutedBrush}" CornerRadius="12" Padding="10,4">
+                            <TextBlock Text="COMING SOON" FontSize="11" FontWeight="Bold" Foreground="{StaticResource AccentLightBrush}"/>
+                        </Border>
+                        <Border Background="{StaticResource BgElevatedBrush}" CornerRadius="12" Padding="10,4">
+                            <TextBlock Text="Mockup viewable at /mockups/" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="{Binding Title}" FontSize="24" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                    <TextBlock Text="{Binding Description}" FontSize="14" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Planned features" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}" FontSize="13"/>
+                    <ItemsControl ItemsSource="{Binding PlannedFeatures}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="10" Margin="0,3">
+                                    <TextBlock Text="▸" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                                    <TextBlock Text="{Binding}" Foreground="{StaticResource TextPrimaryBrush}" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

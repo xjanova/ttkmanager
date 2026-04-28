@@ -1,0 +1,42 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.BulkOpsView"
+             x:DataType="vm:BulkOpsViewModel">
+
+    <Design.DataContext><vm:BulkOpsViewModel/></Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,*">
+        <TextBlock Text="Bulk Operations" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" Margin="0,0,0,10"/>
+
+        <Border Grid.Row="1" Classes="card" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Account" VerticalAlignment="Center" Foreground="{StaticResource TextSecondaryBrush}"/>
+                <ComboBox Width="280" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate><DataTemplate DataType="models:TikTokAccount"><TextBlock Text="{Binding Name}"/></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Content="↻ Refresh" Command="{Binding RefreshCommand}"/>
+                <Button Content="☑ Select All" Command="{Binding SelectAllCommand}"/>
+                <Button Content="⏸ Pause" Command="{Binding BulkPauseCommand}"/>
+                <Button Content="▶ Enable" Command="{Binding BulkEnableCommand}"/>
+                <NumericUpDown Value="{Binding AdjustValue, Mode=TwoWay}" Minimum="0" Increment="100" Width="120"/>
+                <Button Content="＋ Set Budget" Command="{Binding BulkSetBudgetCommand}" Classes="accent"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Campaigns}" IsReadOnly="False" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn Header="✓" Binding="{Binding IsSelected, Mode=TwoWay}" Width="40"/>
+                <DataGridTextColumn Header="Campaign" Binding="{Binding Name}" Width="*" IsReadOnly="True"/>
+                <DataGridTextColumn Header="ID" Binding="{Binding CampaignId}" Width="160" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="100" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Budget" Binding="{Binding Budget}" Width="120" IsReadOnly="True"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

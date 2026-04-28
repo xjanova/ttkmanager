@@ -50,10 +50,32 @@ public static class Bootstrapper
         services.AddTransient<CampaignActionJob>();
         services.AddSingleton<SchedulerService>();
 
+        services.AddSingleton<AutoRulesEngine>();
+        services.AddSingleton<AnomalyDetector>();
+        services.AddSingleton<BudgetPacer>();
+        services.AddSingleton<CsvService>();
+        services.AddSingleton<BackupService>();
+        services.AddSingleton<HealthCheckService>();
+        services.AddSingleton<MockSamplerService>();
+
+        services.AddTransient<ShellViewModel>();
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<AccountsViewModel>();
+        services.AddTransient<CampaignsViewModel>();
         services.AddTransient<SchedulesViewModel>();
         services.AddTransient<LogsViewModel>();
+        services.AddTransient<DashboardViewModel>();
+        services.AddTransient<ReportsViewModel>();
+        services.AddTransient<HeatmapViewModel>();
+        services.AddTransient<AutoRulesViewModel>();
+        services.AddTransient<BulkOpsViewModel>();
+        services.AddTransient<CsvViewModel>();
+        services.AddTransient<AnomalyViewModel>();
+        services.AddTransient<PacingViewModel>();
+        services.AddTransient<SettingsViewModel>();
+        services.AddTransient<BackupViewModel>();
+        services.AddTransient<HealthViewModel>();
+        services.AddTransient<ShortcutsViewModel>();
         services.AddTransient<ConnectAccountViewModel>();
 
         return services.BuildServiceProvider();

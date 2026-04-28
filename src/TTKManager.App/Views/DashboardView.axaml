@@ -1,0 +1,97 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.DashboardView"
+             x:DataType="vm:DashboardViewModel">
+
+    <Design.DataContext><vm:DashboardViewModel/></Design.DataContext>
+
+    <ScrollViewer>
+        <StackPanel Spacing="14">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Text="Dashboard" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" VerticalAlignment="Center"/>
+                <Button Content="↻ Refresh" Command="{Binding RefreshCommand}" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <UniformGrid Columns="4" Rows="1">
+                <Border Classes="card" Margin="0,0,8,0">
+                    <StackPanel>
+                        <TextBlock Text="TODAY'S SPEND" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding TodaySpend}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                    </StackPanel>
+                </Border>
+                <Border Classes="card" Margin="4,0,4,0">
+                    <StackPanel>
+                        <TextBlock Text="AVG CPM (7D)" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding AvgCpm}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                    </StackPanel>
+                </Border>
+                <Border Classes="card" Margin="4,0,4,0">
+                    <StackPanel>
+                        <TextBlock Text="AVG CPC (7D)" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding AvgCpc}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                    </StackPanel>
+                </Border>
+                <Border Classes="card" Margin="8,0,0,0">
+                    <StackPanel>
+                        <TextBlock Text="ROAS (7D)" FontSize="10" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="{Binding AvgRoas}" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <UniformGrid Columns="2" Rows="1">
+                <Border Classes="card" Margin="0,0,8,0">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Active alerts" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                        <ItemsControl ItemsSource="{Binding RecentAlerts}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="models:Alert">
+                                    <Border Margin="0,3" Padding="10,6" CornerRadius="4" Background="#15a3e635">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                            <TextBlock Text="{Binding Body}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+                <Border Classes="card" Margin="8,0,0,0">
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Active rules" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                        <ItemsControl ItemsSource="{Binding NextRules}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="models:ScheduleRule">
+                                    <Grid ColumnDefinitions="*,Auto" Margin="0,3">
+                                        <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding CronExpression}" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" FontFamily="Consolas,Menlo,monospace"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+            </UniformGrid>
+
+            <Border Classes="card">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Recent activity" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <DataGrid ItemsSource="{Binding RecentActivity}" IsReadOnly="True" AutoGenerateColumns="False" MaxHeight="240">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Time" Binding="{Binding Timestamp}" Width="180"/>
+                            <DataGridTextColumn Header="Action" Binding="{Binding Action}" Width="180"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="80"/>
+                            <DataGridTextColumn Header="Detail" Binding="{Binding Detail}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

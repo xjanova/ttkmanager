@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500"
+             x:Class="TTKManager.App.Views.BackupView"
+             x:DataType="vm:BackupViewModel">
+
+    <Design.DataContext><vm:BackupViewModel/></Design.DataContext>
+
+    <StackPanel Spacing="14">
+        <TextBlock Text="Backup &amp; Restore" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+
+        <UniformGrid Columns="2" Rows="1">
+            <Border Classes="card" Margin="0,0,8,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="💾 Create backup" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"
+                               Text="Saves the SQLite DB and appsettings.local.json into a single .ttkbak archive next to the executable."/>
+                    <Button Content="Create .ttkbak now" Command="{Binding CreateBackupCommand}" HorizontalAlignment="Stretch" Classes="accent"/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" Margin="8,0,0,0">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="📦 Restore from .ttkbak" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"
+                               Text="Overwrites the current DB and settings. A snapshot of the existing files is preserved as .pre-restore for safety."/>
+                    <Button Content="Choose .ttkbak file…" Command="{Binding RestoreCommand}" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+
+        <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource AccentLightBrush}"/>
+    </StackPanel>
+</UserControl>

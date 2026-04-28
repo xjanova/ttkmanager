@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500"
+             x:Class="TTKManager.App.Views.ShortcutsView"
+             x:DataType="vm:ShortcutsViewModel">
+
+    <Design.DataContext><vm:ShortcutsViewModel/></Design.DataContext>
+
+    <StackPanel Spacing="14">
+        <TextBlock Text="Keyboard Shortcuts" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+
+        <UniformGrid Columns="2" Rows="1">
+            <Border Classes="card" Margin="0,0,8,0">
+                <StackPanel>
+                    <TextBlock Text="Navigation" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}" Margin="0,0,0,6"/>
+                    <ItemsControl ItemsSource="{Binding Navigation}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:ShortcutEntry">
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,3">
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <Border Grid.Column="1" Background="{StaticResource BgInputBrush}" CornerRadius="4" Padding="6,2">
+                                        <TextBlock Text="{Binding Keys}" FontFamily="Consolas,Menlo,monospace" FontSize="11" Foreground="{StaticResource AccentLightBrush}"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" Margin="8,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="Actions" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}" Margin="0,0,0,6"/>
+                    <ItemsControl ItemsSource="{Binding Actions}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="vm:ShortcutEntry">
+                                <Grid ColumnDefinitions="*,Auto" Margin="0,3">
+                                    <TextBlock Grid.Column="0" Text="{Binding Name}" Foreground="{StaticResource TextPrimaryBrush}"/>
+                                    <Border Grid.Column="1" Background="{StaticResource BgInputBrush}" CornerRadius="4" Padding="6,2">
+                                        <TextBlock Text="{Binding Keys}" FontFamily="Consolas,Menlo,monospace" FontSize="11" Foreground="{StaticResource AccentLightBrush}"/>
+                                    </Border>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </UniformGrid>
+    </StackPanel>
+</UserControl>

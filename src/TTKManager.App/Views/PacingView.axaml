@@ -1,0 +1,49 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:TTKManager.App.ViewModels"
+             xmlns:models="using:TTKManager.App.Models"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="TTKManager.App.Views.PacingView"
+             x:DataType="vm:PacingViewModel">
+
+    <Design.DataContext><vm:PacingViewModel/></Design.DataContext>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+        <TextBlock Text="Budget Pacing &amp; Caps" FontSize="22" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}" Margin="0,0,0,10"/>
+
+        <Border Grid.Row="1" Classes="card" Margin="0,0,0,10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <ComboBox Width="240" ItemsSource="{Binding Accounts}" SelectedItem="{Binding NewAccount, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate><DataTemplate DataType="models:TikTokAccount"><TextBlock Text="{Binding Name}"/></DataTemplate></ComboBox.ItemTemplate>
+                </ComboBox>
+                <ComboBox Width="120" ItemsSource="{Binding Periods}" SelectedItem="{Binding NewPeriod, Mode=TwoWay}"/>
+                <NumericUpDown Value="{Binding NewCap, Mode=TwoWay}" Minimum="0" Increment="1000" Width="180"/>
+                <CheckBox Content="Auto-pause on cap" IsChecked="{Binding NewAutoPause, Mode=TwoWay}" Foreground="{StaticResource TextPrimaryBrush}"/>
+                <Button Content="＋ Add Cap" Command="{Binding AddCapCommand}" Classes="accent"/>
+                <Button Content="🔍 Check Now" Command="{Binding CheckNowCommand}"/>
+                <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="{StaticResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </Border>
+
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Caps}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="vm:PacingRow">
+                    <Border Classes="card" Margin="0,0,0,8">
+                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Description}" FontWeight="SemiBold" Foreground="{StaticResource TextPrimaryBrush}"/>
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Status}" Foreground="{StaticResource AccentLightBrush}" FontWeight="SemiBold"/>
+                            <Grid Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="*,Auto" Margin="0,8,0,0">
+                                <ProgressBar Grid.Column="0" Value="{Binding FillPercent}" Maximum="100" Foreground="{StaticResource AccentPrimaryBrush}" Background="{StaticResource BgInputBrush}" Height="10"/>
+                                <TextBlock Grid.Column="1" Margin="10,0,0,0" Foreground="{StaticResource TextSecondaryBrush}">
+                                    <Run Text="{Binding SpentText}"/><Run Text=" / "/><Run Text="{Binding CapText}"/>
+                                </TextBlock>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>
