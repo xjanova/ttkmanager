@@ -13,8 +13,9 @@
 
     <DockPanel Margin="8">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="8" Margin="0,0,0,8">
+            <Button Content="Connect Account…" Command="{Binding ConnectAccountCommand}" Classes="accent"/>
             <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
-            <Button Content="Add Demo Account (mock)" Command="{Binding AddDemoAccountCommand}"/>
+            <Button Content="Remove Selected" Command="{Binding RemoveAccountCommand}"/>
             <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="#666"/>
         </StackPanel>
 

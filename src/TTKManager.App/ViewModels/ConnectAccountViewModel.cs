@@ -1,3 +1,7 @@
+using System.Diagnostics;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input.Platform;
 using CommunityToolkit.Mvvm.Input;
 using TTKManager.App.Models;
 using TTKManager.App.Services;
@@ -20,6 +24,10 @@ public class ConnectAccountViewModel : ViewModelBase
     public string StatusMessage { get => _statusMessage; set => SetProperty(ref _statusMessage, value); }
 
     public IAsyncRelayCommand ExchangeCodeCommand { get; }
+    public IRelayCommand OpenAuthorizationUrlCommand { get; }
+    public IAsyncRelayCommand CopyUrlCommand { get; }
+
+    public Action<bool>? RequestClose { get; set; }
 
     public ConnectAccountViewModel(Database db, ITikTokApiClient api, ITokenProtector tokens, TikTokAppCredentials creds)
     {
@@ -29,11 +37,58 @@ public class ConnectAccountViewModel : ViewModelBase
         var state = OAuthHelper.GenerateState();
         AuthorizationUrl = OAuthHelper.BuildAuthorizationUrl(creds, state);
         ExchangeCodeCommand = new AsyncRelayCommand(ExchangeCodeAsync);
+        OpenAuthorizationUrlCommand = new RelayCommand(OpenAuthorizationUrl);
+        CopyUrlCommand = new AsyncRelayCommand(CopyUrlAsync);
     }
 
     public ConnectAccountViewModel()
     {
         ExchangeCodeCommand = new AsyncRelayCommand(() => Task.CompletedTask);
+        OpenAuthorizationUrlCommand = new RelayCommand(() => { });
+        CopyUrlCommand = new AsyncRelayCommand(() => Task.CompletedTask);
+    }
+
+    private void OpenAuthorizationUrl()
+    {
+        if (string.IsNullOrWhiteSpace(AuthorizationUrl)) return;
+        try
+        {
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = AuthorizationUrl,
+                UseShellExecute = true
+            });
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Could not open browser: {ex.Message}";
+        }
+    }
+
+    private async Task CopyUrlAsync()
+    {
+        try
+        {
+            var clipboard = GetClipboard();
+            if (clipboard is null)
+            {
+                StatusMessage = "Clipboard unavailable";
+                return;
+            }
+            await clipboard.SetTextAsync(AuthorizationUrl);
+            StatusMessage = "URL copied to clipboard";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Copy failed: {ex.Message}";
+        }
+    }
+
+    private static IClipboard? GetClipboard()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            return desktop.MainWindow?.Clipboard;
+        return null;
     }
 
     private async Task ExchangeCodeAsync()
@@ -50,6 +105,7 @@ public class ConnectAccountViewModel : ViewModelBase
         }
         try
         {
+            StatusMessage = "Exchanging code…";
             var pair = await _api.ExchangeAuthCodeAsync(PastedCode.Trim());
             var advertisers = await _api.ListAuthorizedAdvertisersAsync(pair.AccessToken);
             foreach (var a in advertisers)
@@ -68,6 +124,7 @@ public class ConnectAccountViewModel : ViewModelBase
             }
             StatusMessage = $"Connected {advertisers.Count} advertiser(s)";
             PastedCode = "";
+            RequestClose?.Invoke(true);
         }
         catch (Exception ex)
         {

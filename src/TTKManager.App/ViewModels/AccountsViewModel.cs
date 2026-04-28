@@ -1,7 +1,11 @@
 using System.Collections.ObjectModel;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Extensions.DependencyInjection;
 using TTKManager.App.Models;
 using TTKManager.App.Services;
+using TTKManager.App.Views;
 
 namespace TTKManager.App.ViewModels;
 
@@ -10,6 +14,7 @@ public class AccountsViewModel : ViewModelBase
     private readonly Database? _db;
     private readonly ITikTokApiClient? _api;
     private readonly ITokenProtector? _tokens;
+    private readonly IServiceProvider? _services;
 
     public ObservableCollection<TikTokAccount> Accounts { get; } = new();
 
@@ -17,7 +22,11 @@ public class AccountsViewModel : ViewModelBase
     public TikTokAccount? SelectedAccount
     {
         get => _selectedAccount;
-        set => SetProperty(ref _selectedAccount, value);
+        set
+        {
+            SetProperty(ref _selectedAccount, value);
+            RemoveAccountCommand.NotifyCanExecuteChanged();
+        }
     }
 
     private string _statusMessage = "";
@@ -28,22 +37,26 @@ public class AccountsViewModel : ViewModelBase
     }
 
     public IAsyncRelayCommand RefreshCommand { get; }
-    public IAsyncRelayCommand AddDemoAccountCommand { get; }
+    public IAsyncRelayCommand ConnectAccountCommand { get; }
+    public IAsyncRelayCommand RemoveAccountCommand { get; }
 
-    public AccountsViewModel(Database db, ITikTokApiClient api, ITokenProtector tokens)
+    public AccountsViewModel(Database db, ITikTokApiClient api, ITokenProtector tokens, IServiceProvider services)
     {
         _db = db;
         _api = api;
         _tokens = tokens;
+        _services = services;
         RefreshCommand = new AsyncRelayCommand(RefreshAsync);
-        AddDemoAccountCommand = new AsyncRelayCommand(AddDemoAccountAsync);
+        ConnectAccountCommand = new AsyncRelayCommand(ConnectAccountAsync);
+        RemoveAccountCommand = new AsyncRelayCommand(RemoveAccountAsync, () => SelectedAccount is not null);
         _ = RefreshAsync();
     }
 
     public AccountsViewModel()
     {
         RefreshCommand = new AsyncRelayCommand(() => Task.CompletedTask);
-        AddDemoAccountCommand = new AsyncRelayCommand(() => Task.CompletedTask);
+        ConnectAccountCommand = new AsyncRelayCommand(() => Task.CompletedTask);
+        RemoveAccountCommand = new AsyncRelayCommand(() => Task.CompletedTask, () => false);
     }
 
     private async Task RefreshAsync()
@@ -55,21 +68,33 @@ public class AccountsViewModel : ViewModelBase
         StatusMessage = $"{Accounts.Count} account(s) connected";
     }
 
-    private async Task AddDemoAccountAsync()
+    private async Task ConnectAccountAsync()
     {
-        if (_db is null || _tokens is null || _api is null) return;
-        var pair = await _api.ExchangeAuthCodeAsync("demo_auth_code");
-        var account = new TikTokAccount
-        {
-            AdvertiserId = $"demo_{DateTime.UtcNow:yyyyMMddHHmmss}",
-            Name = "Demo Advertiser",
-            Currency = "THB",
-            Country = "TH",
-            EncryptedAccessToken = _tokens.Protect(pair.AccessToken),
-            EncryptedRefreshToken = _tokens.Protect(pair.RefreshToken),
-            AccessTokenExpiresAt = pair.AccessTokenExpiresAt
-        };
-        await _db.UpsertAccountAsync(account);
+        if (_services is null) return;
+        var vm = _services.GetRequiredService<ConnectAccountViewModel>();
+        var window = new ConnectAccountWindow(vm);
+        var owner = GetMainWindow();
+        bool? result = null;
+        if (owner is not null)
+            result = await window.ShowDialog<bool?>(owner);
+        else
+            window.Show();
+        if (result == true)
+            await RefreshAsync();
+    }
+
+    private async Task RemoveAccountAsync()
+    {
+        if (_db is null || SelectedAccount is null) return;
+        await _db.DeleteAccountAsync(SelectedAccount.AdvertiserId);
+        SelectedAccount = null;
         await RefreshAsync();
+    }
+
+    private static Avalonia.Controls.Window? GetMainWindow()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+            return desktop.MainWindow;
+        return null;
     }
 }

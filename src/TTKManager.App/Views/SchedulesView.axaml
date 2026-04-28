@@ -4,7 +4,7 @@
              xmlns:models="using:TTKManager.App.Models"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500"
              x:Class="TTKManager.App.Views.SchedulesView"
              x:DataType="vm:SchedulesViewModel">
 
@@ -12,32 +12,60 @@
         <vm:SchedulesViewModel/>
     </Design.DataContext>
 
-    <Grid Margin="8" RowDefinitions="Auto,Auto,Auto,*">
-        <Border Grid.Row="0" Background="#F5F5F5" Padding="10" CornerRadius="6" Margin="0,0,0,8">
-            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="8">
-                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding NewRuleName}" Watermark="Peak hours boost"/>
-                <TextBlock Grid.Row="0" Grid.Column="2" Text="Advertiser ID" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding NewRuleAdvertiserId}" Watermark="7..."/>
-                <TextBlock Grid.Row="0" Grid.Column="4" Text="Campaign ID" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="0" Grid.Column="5" Text="{Binding NewRuleCampaignId}" Watermark="campaign_001"/>
+    <Grid Margin="8" RowDefinitions="Auto,Auto,*">
+        <Border Grid.Row="0" Background="#F5F5F5" Padding="12" CornerRadius="6" Margin="0,0,0,8">
+            <Grid ColumnDefinitions="120,*,120,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="8" ColumnSpacing="8">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Rule name" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding NewRuleName, Mode=TwoWay}" Watermark="e.g. Peak hours boost"/>
 
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Action" VerticalAlignment="Center"/>
-                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding AvailableActions}" SelectedItem="{Binding NewRuleAction}" HorizontalAlignment="Stretch"/>
-                <TextBlock Grid.Row="1" Grid.Column="2" Text="Daily Budget" VerticalAlignment="Center"/>
-                <NumericUpDown Grid.Row="1" Grid.Column="3" Value="{Binding NewRuleBudget}" Minimum="0" Increment="100"/>
-                <TextBlock Grid.Row="1" Grid.Column="4" Text="Cron" VerticalAlignment="Center"/>
-                <TextBox Grid.Row="1" Grid.Column="5" Text="{Binding NewRuleCron}"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Account" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Accounts}" SelectedItem="{Binding SelectedAccount, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="models:TikTokAccount">
+                            <TextBlock>
+                                <Run Text="{Binding Name}"/>
+                                <Run Text="("/><Run Text="{Binding AdvertiserId}"/><Run Text=")"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="Campaign" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="1" Grid.Column="3" ItemsSource="{Binding Campaigns}" SelectedItem="{Binding SelectedCampaign, Mode=TwoWay}" HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate DataType="models:Campaign">
+                            <TextBlock>
+                                <Run Text="{Binding Name}"/>
+                                <Run Text="("/><Run Text="{Binding CampaignId}"/><Run Text=")"/>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
-                <StackPanel Grid.Row="2" Grid.ColumnSpan="6" Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
-                    <Button Content="Add Rule" Command="{Binding AddRuleCommand}"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Action" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="2" Grid.Column="1" ItemsSource="{Binding AvailableActions}" SelectedItem="{Binding NewRuleAction, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="Daily budget" VerticalAlignment="Center"/>
+                <NumericUpDown Grid.Row="2" Grid.Column="3" Value="{Binding NewRuleBudget, Mode=TwoWay}" Minimum="0" Increment="100"/>
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="When" VerticalAlignment="Center"/>
+                <ComboBox Grid.Row="3" Grid.Column="1" ItemsSource="{Binding CronPresets}" SelectedItem="{Binding SelectedCronPreset, Mode=TwoWay}" HorizontalAlignment="Stretch"/>
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="Cron expr" VerticalAlignment="Center"/>
+                <TextBox Grid.Row="3" Grid.Column="3" Text="{Binding NewRuleCron, Mode=TwoWay}" FontFamily="Consolas,Menlo,monospace"/>
+
+                <StackPanel Grid.Row="4" Grid.ColumnSpan="4" Orientation="Horizontal" Spacing="8" Margin="0,4,0,0">
+                    <Button Content="Add Rule" Command="{Binding AddRuleCommand}" Classes="accent"/>
                     <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
+                    <Button Content="Reload Campaigns" Command="{Binding LoadCampaignsCommand}"/>
                     <TextBlock VerticalAlignment="Center" Text="{Binding StatusMessage}" Foreground="#666"/>
                 </StackPanel>
             </Grid>
         </Border>
 
-        <DataGrid Grid.Row="3" ItemsSource="{Binding Rules}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="8" Margin="0,0,0,4">
+            <Button Content="Toggle Enabled" Command="{Binding ToggleRuleCommand}"/>
+            <Button Content="Delete Rule" Command="{Binding DeleteRuleCommand}"/>
+        </StackPanel>
+
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Rules}" SelectedItem="{Binding SelectedRule, Mode=TwoWay}" IsReadOnly="True" AutoGenerateColumns="False" GridLinesVisibility="Horizontal">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="60"/>
                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*"/>

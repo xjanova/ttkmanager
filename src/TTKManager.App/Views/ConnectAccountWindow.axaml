@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TTKManager.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="420"
+        x:Class="TTKManager.App.Views.ConnectAccountWindow"
+        x:DataType="vm:ConnectAccountViewModel"
+        Width="620" Height="460"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Title="Connect TikTok Ad Account">
+
+    <Design.DataContext>
+        <vm:ConnectAccountViewModel/>
+    </Design.DataContext>
+
+    <Grid Margin="16" RowDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto" RowSpacing="12">
+        <TextBlock Grid.Row="0" FontSize="18" FontWeight="SemiBold" Text="Connect a TikTok Ad Account"/>
+        <TextBlock Grid.Row="1" TextWrapping="Wrap" Foreground="#555"
+                   Text="Out-of-band OAuth: open the URL in your browser, log in to TikTok Business Center, approve the requested permissions, and copy the authorization code from the callback page back into the field below."/>
+
+        <Border Grid.Row="2" Background="#F4F4F4" CornerRadius="6" Padding="10">
+            <StackPanel Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="1. Authorization URL"/>
+                <TextBox Text="{Binding AuthorizationUrl}" IsReadOnly="True" TextWrapping="Wrap" FontFamily="Consolas,Menlo,monospace" FontSize="11"/>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Open in Browser" Command="{Binding OpenAuthorizationUrlCommand}"/>
+                    <Button Content="Copy URL" Command="{Binding CopyUrlCommand}"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <Border Grid.Row="3" Background="#F4F4F4" CornerRadius="6" Padding="10">
+            <StackPanel Spacing="6">
+                <TextBlock FontWeight="SemiBold" Text="2. Paste authorization code"/>
+                <TextBox Text="{Binding PastedCode, Mode=TwoWay}" Watermark="Paste the auth_code from the callback page here"/>
+            </StackPanel>
+        </Border>
+
+        <StackPanel Grid.Row="4" Orientation="Horizontal" Spacing="8">
+            <Button Content="Exchange Code" Command="{Binding ExchangeCodeCommand}" Classes="accent"/>
+            <Button Content="Cancel" Click="OnCancelClick"/>
+        </StackPanel>
+
+        <TextBlock Grid.Row="5" Text="{Binding StatusMessage}" Foreground="#444" TextWrapping="Wrap" VerticalAlignment="Top"/>
+
+        <TextBlock Grid.Row="6" FontSize="11" Foreground="#888" TextWrapping="Wrap"
+                   Text="If your developer app has not been approved yet, the Marketing API endpoints will return errors. Use the Mock mode (default) for initial testing."/>
+    </Grid>
+</Window>

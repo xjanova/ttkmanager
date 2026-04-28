@@ -118,6 +118,12 @@ public sealed class Database : IDisposable
             });
     }
 
+    public async Task DeleteAccountAsync(string advertiserId)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync("DELETE FROM accounts WHERE advertiser_id = @advertiserId", new { advertiserId });
+    }
+
     public async Task<IReadOnlyList<ScheduleRule>> ListRulesAsync()
     {
         using var conn = Open();
@@ -161,6 +167,19 @@ public sealed class Database : IDisposable
                 Enabled = rule.Enabled ? 1 : 0,
                 CreatedAt = rule.CreatedAt.ToUnixTimeSeconds()
             });
+    }
+
+    public async Task DeleteRuleAsync(long ruleId)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync("DELETE FROM schedule_rules WHERE id = @ruleId", new { ruleId });
+    }
+
+    public async Task UpdateRuleEnabledAsync(long ruleId, bool enabled)
+    {
+        using var conn = Open();
+        await conn.ExecuteAsync("UPDATE schedule_rules SET enabled = @enabled WHERE id = @ruleId",
+            new { ruleId, enabled = enabled ? 1 : 0 });
     }
 
     public async Task InsertAuditAsync(AuditLogEntry entry)

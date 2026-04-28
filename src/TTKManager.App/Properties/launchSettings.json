@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "TTKManager.App": {
+      "commandName": "Project",
+      "workingDirectory": "$(MSBuildProjectDirectory)"
+    },
+    "TTKManager.App (Mock)": {
+      "commandName": "Project",
+      "workingDirectory": "$(MSBuildProjectDirectory)",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
