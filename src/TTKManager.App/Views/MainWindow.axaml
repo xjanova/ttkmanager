@@ -28,18 +28,16 @@
                     </StackPanel>
                 </StackPanel>
 
-                <Border Grid.Column="2" Padding="10,5" CornerRadius="14" VerticalAlignment="Center"
-                        Background="{StaticResource BgElevatedBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
-                    <StackPanel Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
-                        <Ellipse Width="8" Height="8" VerticalAlignment="Center">
-                            <Ellipse.Styles>
-                                <Style Selector="Ellipse"><Setter Property="Fill" Value="{StaticResource TextTertiaryBrush}"/></Style>
-                            </Ellipse.Styles>
-                        </Ellipse>
-                        <TextBlock Text="{Binding DemoStatusLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" VerticalAlignment="Center"/>
-                        <Button Content="{Binding DemoButtonLabel}" Command="{Binding ToggleDemoCommand}" Classes="accent" Padding="10,4"/>
-                    </StackPanel>
-                </Border>
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <Border Padding="10,5" CornerRadius="14" Background="{StaticResource BgElevatedBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
+                            <TextBlock Text="{Binding StatusPillEmoji}" FontSize="13" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding DemoStatusLabel}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <Button Content="{Binding LicenseLabel}" Command="{Binding OpenLicenseCommand}" Padding="10,4"/>
+                    <Button Content="{Binding DemoButtonLabel}" Command="{Binding ToggleDemoCommand}" Classes="accent" Padding="10,4"/>
+                </StackPanel>
             </Grid>
         </Border>
 

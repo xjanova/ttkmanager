@@ -1,0 +1,82 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TTKManager.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="540"
+        x:Class="TTKManager.App.Views.LicenseDialog"
+        x:DataType="vm:LicenseViewModel"
+        Width="640" Height="560"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Icon="/Assets/app.ico"
+        Background="{StaticResource BgPrimaryBrush}"
+        Title="License — TTK Manager">
+
+    <Design.DataContext><vm:LicenseViewModel/></Design.DataContext>
+
+    <DockPanel Margin="20">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="14" Margin="0,0,0,16">
+            <Image Source="/Assets/logottk.png" Width="44" Height="44"/>
+            <StackPanel VerticalAlignment="Center">
+                <TextBlock Text="TTK Manager License" FontSize="20" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                <TextBlock Text="xman studio · xman4289.com" FontSize="11" Foreground="{StaticResource TextSecondaryBrush}"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Bottom" Margin="0,12,0,0" Spacing="6">
+            <TextBlock Text="{Binding StatusMessage}" Foreground="{StaticResource AccentLightBrush}" TextWrapping="Wrap"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="Close" Click="OnCloseClick"/>
+            </StackPanel>
+        </StackPanel>
+
+        <StackPanel Spacing="14">
+            <Border Classes="card">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Current license" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <Grid ColumnDefinitions="160,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="6">
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Plan" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding CurrentLicenseType}" Foreground="{StaticResource TextPrimaryBrush}" FontWeight="SemiBold"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Key" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding CurrentLicenseKey}" Foreground="{StaticResource TextPrimaryBrush}" FontFamily="Consolas,Menlo,monospace"/>
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Machine ID" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding MachineId}" Foreground="{StaticResource TextPrimaryBrush}" FontFamily="Consolas,Menlo,monospace" FontSize="11" TextWrapping="Wrap"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" IsVisible="{Binding IsInactive}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Activate license" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
+                               Text="Enter your TTK-XXXX-XXXX-XXXX key. Your machine fingerprint is sent so the key can be locked to this device — same scheme other xman studio products use."/>
+                    <TextBox Text="{Binding EnteredKey, Mode=TwoWay}" Watermark="TTK-XXXX-XXXX-XXXX" FontFamily="Consolas,Menlo,monospace"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Activate" Command="{Binding ActivateCommand}" Classes="accent" IsEnabled="{Binding !IsBusy}"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card" IsVisible="{Binding IsActive}">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Manage license" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <Button Content="Re-validate now" Command="{Binding ValidateCommand}" IsEnabled="{Binding !IsBusy}"/>
+                        <Button Content="Deactivate on this machine" Command="{Binding DeactivateCommand}" Classes="danger" IsEnabled="{Binding !IsBusy}"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{StaticResource TextTertiaryBrush}"
+                               Text="Deactivating frees this license seat so you can move it to another machine."/>
+                </StackPanel>
+            </Border>
+
+            <Border Classes="card">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Don't have a key?" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="12" Foreground="{StaticResource TextSecondaryBrush}"
+                               Text="Use Demo Mode for an offline tour with sample data — no key required, and you can exit any time. Visit xman4289.com to purchase a Pro key."/>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </DockPanel>
+</Window>

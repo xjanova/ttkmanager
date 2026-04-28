@@ -58,6 +58,7 @@ public static class Bootstrapper
         services.AddSingleton<HealthCheckService>();
         services.AddSingleton<MockSamplerService>();
         services.AddSingleton<DemoModeService>();
+        services.AddSingleton<XmanLicenseService>();
 
         services.AddTransient<ShellViewModel>();
         services.AddTransient<MainWindowViewModel>();
@@ -78,6 +79,7 @@ public static class Bootstrapper
         services.AddTransient<HealthViewModel>();
         services.AddTransient<ShortcutsViewModel>();
         services.AddTransient<ConnectAccountViewModel>();
+        services.AddTransient<LicenseViewModel>();
 
         return services.BuildServiceProvider();
     }

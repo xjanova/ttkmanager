@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:TTKManager.App.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="520" d:DesignHeight="240"
+        x:Class="TTKManager.App.Views.DemoProgressDialog"
+        x:DataType="vm:DemoProgressViewModel"
+        Width="520" Height="260"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        SystemDecorations="BorderOnly"
+        Icon="/Assets/app.ico"
+        Background="{StaticResource BgPrimaryBrush}"
+        Title="Building demo data">
+
+    <Design.DataContext><vm:DemoProgressViewModel/></Design.DataContext>
+
+    <Border BorderBrush="{StaticResource BorderActiveBrush}" BorderThickness="1" CornerRadius="10" Background="{StaticResource BgPrimaryBrush}">
+        <StackPanel Margin="28" Spacing="12">
+            <StackPanel Orientation="Horizontal" Spacing="14">
+                <Image Source="/Assets/logottk.png" Width="40" Height="40"/>
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AccentPrimaryBrush}"/>
+                    <TextBlock Text="Populating SQLite with sample accounts, campaigns, schedules, and 1.2k metric samples — locally, on your machine."
+                               FontSize="11" Foreground="{StaticResource TextSecondaryBrush}" TextWrapping="Wrap" MaxWidth="420"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Grid ColumnDefinitions="*,60" RowDefinitions="Auto,Auto" Margin="0,8,0,0">
+                <ProgressBar Grid.Row="0" Grid.Column="0" Minimum="0" Maximum="100" Value="{Binding Percent}"
+                             Height="14" CornerRadius="7"
+                             Foreground="{StaticResource AccentPrimaryBrush}"
+                             Background="{StaticResource BgInputBrush}"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding PercentText}" Foreground="{StaticResource AccentPrimaryBrush}" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding Stage}" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,8,0,0" FontSize="12"/>
+            </Grid>
+        </StackPanel>
+    </Border>
+</Window>

@@ -9,8 +9,12 @@ public sealed class DemoModeService
     private readonly Random _rng = new(2026);
 
     public event Action<bool>? StateChanged;
+    public event Action<DemoProgress>? ProgressChanged;
 
     public DemoModeService(Database db) { _db = db; }
+
+    private void Report(string stage, int current, int total) =>
+        ProgressChanged?.Invoke(new DemoProgress(stage, current, total));
 
     public async Task<bool> IsActiveAsync()
     {
@@ -21,16 +25,20 @@ public sealed class DemoModeService
     public async Task EnableAsync()
     {
         if (await IsActiveAsync()) return;
+        Report("Clearing previous demo data", 0, 100);
         await _db.DeleteDemoDataAsync();
         await SeedAsync();
         await _db.SetStateAsync(Key, "1");
+        Report("Done", 100, 100);
         StateChanged?.Invoke(true);
     }
 
     public async Task DisableAsync()
     {
+        Report("Removing demo data", 0, 100);
         await _db.DeleteDemoDataAsync();
         await _db.SetStateAsync(Key, "0");
+        Report("Done", 100, 100);
         StateChanged?.Invoke(false);
     }
 
@@ -64,6 +72,7 @@ public sealed class DemoModeService
             }
         };
 
+        Report("Seeding 3 advertiser accounts", 5, 100);
         foreach (var a in accounts) await _db.InsertDemoAccountAsync(a);
 
         var campaigns = new (string adv, string cid, string name)[]
@@ -87,6 +96,7 @@ public sealed class DemoModeService
             new ScheduleRule { AdvertiserId = "demo_us_002", CampaignId = "campaign_006", Name = "US off-hours pause", Action = RuleAction.PauseCampaign, CronExpression = "0 0 23 * * ?" }
         };
 
+        Report("Seeding 6 schedule rules", 10, 100);
         foreach (var r in schedRules) await _db.InsertDemoRuleAsync(r, DateTimeOffset.UtcNow.AddDays(-_rng.Next(2, 14)));
 
         var autoRules = new[]
@@ -98,6 +108,7 @@ public sealed class DemoModeService
             new AutoRule { Name = "Alert on CPM spike", AdvertiserId = "demo_us_002", Metric = AutoMetric.Cpm, Comparator = AutoComparator.GreaterThan, Threshold = 120m, WindowMinutes = 60, Action = AutoAction.AlertOnly, CooldownMinutes = 60, LastFiredAt = DateTimeOffset.UtcNow.AddMinutes(-72) }
         };
 
+        Report("Seeding 5 auto-rules", 15, 100);
         foreach (var ar in autoRules) await _db.InsertDemoAutoRuleAsync(ar);
 
         var caps = new[]
@@ -108,10 +119,14 @@ public sealed class DemoModeService
             new BudgetCap { AdvertiserId = "demo_sandbox_003", CampaignIdScope = "campaign_007", Period = CapPeriod.Daily, CapAmount = 1000m, Currency = "THB", AutoPauseOnCap = true }
         };
 
+        Report("Seeding 4 budget caps", 18, 100);
         foreach (var c in caps) await _db.InsertDemoBudgetCapAsync(c);
 
+        var totalDays = 15;
         for (int day = 14; day >= 0; day--)
         {
+            var dayProgress = 18 + (int)((14 - day) / (double)totalDays * 65);
+            Report($"Generating metric samples — day {15 - day} of {totalDays}", dayProgress, 100);
             for (int h = 0; h < 24; h += 2)
             {
                 var ts = DateTimeOffset.UtcNow.AddDays(-day).AddHours(-h);
@@ -155,8 +170,10 @@ public sealed class DemoModeService
             new Alert { Severity = AlertSeverity.Info, Source = AlertSource.System, Title = "Backup created", Body = "ttkmanager-backup-20260428-090012.ttkbak (412 KB)", Timestamp = DateTimeOffset.UtcNow.AddHours(-9) }
         };
 
+        Report("Seeding 7 alerts", 88, 100);
         foreach (var al in alerts) await _db.InsertDemoAlertAsync(al);
 
+        Report("Seeding 32 audit log entries", 95, 100);
         var actions = new[] { "SetBudget", "Pause", "Enable", "AutoRule:PauseCampaign", "RefreshToken", "AutoRule:IncreaseBudgetPercent" };
         for (int i = 0; i < 32; i++)
         {
@@ -175,4 +192,9 @@ public sealed class DemoModeService
             });
         }
     }
+}
+
+public sealed record DemoProgress(string Stage, int Current, int Total)
+{
+    public double Percent => Total > 0 ? (double)Current / Total * 100 : 0;
 }
