@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # TTKManager portable publish script — single-file self-contained Windows x64 build.
-# Output: publish/TTKManager.App.exe (no install, no .NET runtime required on target).
+# Output: publish/TTKManager.exe (no install, no .NET runtime required on target).
 
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -20,5 +20,5 @@ dotnet publish src/TTKManager.App/TTKManager.App.csproj \
 echo
 echo "==============================================="
 echo " Portable build ready in: $(pwd)/publish"
-echo " Run: publish/TTKManager.App.exe"
+echo " Run: publish/TTKManager.exe"
 echo "==============================================="

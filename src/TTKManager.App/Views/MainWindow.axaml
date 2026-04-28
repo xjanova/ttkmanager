@@ -4,10 +4,13 @@
         xmlns:views="using:TTKManager.App.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+        mc:Ignorable="d" d:DesignWidth="1000" d:DesignHeight="640"
         x:Class="TTKManager.App.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Width="980" Height="640"
+        Width="1080" Height="700"
+        MinWidth="900" MinHeight="560"
+        Icon="/Assets/app.ico"
+        Background="{StaticResource BgPrimaryBrush}"
         Title="{Binding Title}">
 
     <Design.DataContext>
@@ -15,11 +18,27 @@
     </Design.DataContext>
 
     <DockPanel>
-        <Border DockPanel.Dock="Top" Background="#1A1A1A" Padding="16,10">
-            <TextBlock Text="TTKManager" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource HeaderGradientBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="20,12">
+            <Grid ColumnDefinitions="Auto,Auto,*,Auto">
+                <Image Grid.Column="0" Source="/Assets/logottk.png" Width="40" Height="40" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Margin="14,0,0,0" VerticalAlignment="Center">
+                    <TextBlock Text="TTK Manager" Foreground="{StaticResource AccentPrimaryBrush}" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="TikTok Marketing API ad scheduler" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11"/>
+                </StackPanel>
+                <Border Grid.Column="3" Background="{StaticResource BgElevatedBrush}" CornerRadius="14" Padding="10,4" VerticalAlignment="Center" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <Ellipse Width="8" Height="8" Fill="{StaticResource AccentPrimaryBrush}" VerticalAlignment="Center"/>
+                        <TextBlock Text="Local mode" Foreground="{StaticResource TextSecondaryBrush}" FontSize="11" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
         </Border>
 
-        <TabControl Margin="8">
+        <TabControl Margin="12,8,12,12">
             <TabItem Header="Accounts">
                 <views:AccountsView DataContext="{Binding Accounts}"/>
             </TabItem>

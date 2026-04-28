@@ -110,7 +110,7 @@ Single-file self-contained Windows x64 executable, no .NET runtime required on t
 ./publish.sh           # Bash / WSL / Git Bash
 ```
 
-Output: `publish/TTKManager.App.exe`. Place that one file (and optionally `appsettings.local.json` next to it) anywhere — USB stick, network share, user folder — and run.
+Output: `publish/TTKManager.exe`. Place that one file (and optionally `appsettings.local.json` next to it) anywhere — USB stick, network share, user folder — and run.
 
 ## OAuth flow (out-of-band)
 

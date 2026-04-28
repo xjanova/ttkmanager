@@ -1,6 +1,6 @@
 @echo off
 REM TTKManager portable publish script — single-file self-contained Windows x64 build.
-REM Output: publish/TTKManager.App.exe (no install, no .NET runtime required on target).
+REM Output: publish/TTKManager.exe (no install, no .NET runtime required on target).
 
 setlocal
 pushd "%~dp0"
@@ -27,7 +27,7 @@ if errorlevel 1 (
 echo.
 echo ===============================================
 echo  Portable build ready in: %CD%\publish
-echo  Run: publish\TTKManager.App.exe
+echo  Run: publish\TTKManager.exe
 echo ===============================================
 
 popd

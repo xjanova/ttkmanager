@@ -1,0 +1,104 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- ============================================== -->
+    <!-- TTKManager — Neon Lime Theme                   -->
+    <!-- Anchor: lime-green from the TTK Manager logo    -->
+    <!-- ============================================== -->
+
+    <!-- Background -->
+    <Color x:Key="BgPrimaryColor">#070b0d</Color>
+    <Color x:Key="BgSecondaryColor">#0c1417</Color>
+    <Color x:Key="BgTertiaryColor">#121b1f</Color>
+    <Color x:Key="BgCardColor">#0f1a1c</Color>
+    <Color x:Key="BgElevatedColor">#162226</Color>
+    <Color x:Key="BgInputColor">#0c1417</Color>
+
+    <!-- Accent — Neon lime green from logo -->
+    <Color x:Key="AccentPrimaryColor">#a3e635</Color>
+    <Color x:Key="AccentSecondaryColor">#84cc16</Color>
+    <Color x:Key="AccentTertiaryColor">#65a30d</Color>
+    <Color x:Key="AccentLightColor">#bef264</Color>
+    <Color x:Key="AccentMutedColor">#365314</Color>
+    <Color x:Key="AccentForegroundColor">#0a1808</Color>
+
+    <!-- Status -->
+    <Color x:Key="DangerColor">#ef4444</Color>
+    <Color x:Key="DangerDarkColor">#b91c1c</Color>
+    <Color x:Key="SuccessColor">#22c55e</Color>
+    <Color x:Key="WarningColor">#f59e0b</Color>
+    <Color x:Key="InfoColor">#22d3ee</Color>
+
+    <!-- Aurora highlights (sparingly) -->
+    <Color x:Key="AuroraCyanColor">#06b6d4</Color>
+    <Color x:Key="AuroraPurpleColor">#8b5cf6</Color>
+
+    <!-- Text -->
+    <Color x:Key="TextPrimaryColor">#ecfccb</Color>
+    <Color x:Key="TextSecondaryColor">#94a3b8</Color>
+    <Color x:Key="TextTertiaryColor">#64748b</Color>
+    <Color x:Key="TextDisabledColor">#475569</Color>
+
+    <!-- Borders -->
+    <Color x:Key="BorderColor">#1f2e2a</Color>
+    <Color x:Key="BorderHoverColor">#2f4438</Color>
+    <Color x:Key="BorderActiveColor">#a3e635</Color>
+
+    <!-- Solid brushes -->
+    <SolidColorBrush x:Key="BgPrimaryBrush" Color="{StaticResource BgPrimaryColor}"/>
+    <SolidColorBrush x:Key="BgSecondaryBrush" Color="{StaticResource BgSecondaryColor}"/>
+    <SolidColorBrush x:Key="BgTertiaryBrush" Color="{StaticResource BgTertiaryColor}"/>
+    <SolidColorBrush x:Key="BgCardBrush" Color="{StaticResource BgCardColor}"/>
+    <SolidColorBrush x:Key="BgElevatedBrush" Color="{StaticResource BgElevatedColor}"/>
+    <SolidColorBrush x:Key="BgInputBrush" Color="{StaticResource BgInputColor}"/>
+
+    <SolidColorBrush x:Key="AccentPrimaryBrush" Color="{StaticResource AccentPrimaryColor}"/>
+    <SolidColorBrush x:Key="AccentSecondaryBrush" Color="{StaticResource AccentSecondaryColor}"/>
+    <SolidColorBrush x:Key="AccentTertiaryBrush" Color="{StaticResource AccentTertiaryColor}"/>
+    <SolidColorBrush x:Key="AccentLightBrush" Color="{StaticResource AccentLightColor}"/>
+    <SolidColorBrush x:Key="AccentMutedBrush" Color="{StaticResource AccentMutedColor}"/>
+    <SolidColorBrush x:Key="AccentForegroundBrush" Color="{StaticResource AccentForegroundColor}"/>
+
+    <SolidColorBrush x:Key="DangerBrush" Color="{StaticResource DangerColor}"/>
+    <SolidColorBrush x:Key="DangerDarkBrush" Color="{StaticResource DangerDarkColor}"/>
+    <SolidColorBrush x:Key="SuccessBrush" Color="{StaticResource SuccessColor}"/>
+    <SolidColorBrush x:Key="WarningBrush" Color="{StaticResource WarningColor}"/>
+    <SolidColorBrush x:Key="InfoBrush" Color="{StaticResource InfoColor}"/>
+
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource TextPrimaryColor}"/>
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource TextSecondaryColor}"/>
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="{StaticResource TextTertiaryColor}"/>
+    <SolidColorBrush x:Key="TextDisabledBrush" Color="{StaticResource TextDisabledColor}"/>
+
+    <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource BorderColor}"/>
+    <SolidColorBrush x:Key="BorderHoverBrush" Color="{StaticResource BorderHoverColor}"/>
+    <SolidColorBrush x:Key="BorderActiveBrush" Color="{StaticResource BorderActiveColor}"/>
+
+    <!-- Gradients -->
+    <LinearGradientBrush x:Key="AccentGradientBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#bef264" Offset="0"/>
+        <GradientStop Color="#a3e635" Offset="0.4"/>
+        <GradientStop Color="#65a30d" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="HeaderGradientBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="#070b0d" Offset="0"/>
+        <GradientStop Color="#0c1417" Offset="0.4"/>
+        <GradientStop Color="#121b1f" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="CardGradientBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="#162226" Offset="0"/>
+        <GradientStop Color="#0f1a1c" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="DangerGradientBrush" StartPoint="0%,0%" EndPoint="100%,100%">
+        <GradientStop Color="#ef4444" Offset="0"/>
+        <GradientStop Color="#b91c1c" Offset="1"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GlowGradientBrush" StartPoint="50%,0%" EndPoint="50%,100%">
+        <GradientStop Color="#33a3e635" Offset="0"/>
+        <GradientStop Color="#00a3e635" Offset="1"/>
+    </LinearGradientBrush>
+</ResourceDictionary>
